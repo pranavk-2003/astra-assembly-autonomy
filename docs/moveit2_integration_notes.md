@@ -147,6 +147,69 @@ rotation with the part's own yaw (rotation about the now-vertical approach axis)
 `tf_adapter.calibrate_gripper_orientation`, so the carried part's long axis matches its recipe
 orientation instead of a fixed one. This remains confined to the adapter layer.
 
+## Gazebo (`gz_sim`) physics simulation: world verified live, MoveItPy sim-time blocked
+
+`launch/demo_gazebo.launch.py` + `config/panda_gazebo.urdf.xacro` add real physics (gravity, contact)
+in place of `demo.launch.py`'s `mock_components` fake hardware. The upstream
+`moveit_resources_panda_moveit_config` package only ships `mock_components`/`isaac` hardware types
+(see `config/panda.ros2_control.xacro` in that package), not `gz_sim`, so this repo supplies its own
+xacro instead of patching a system package in place - the visual/collision/kinematic URDF is reused
+from `moveit_resources_panda_description` unmodified; only the `<ros2_control>` block (hardware
+plugin `gz_ros2_control/GazeboSimSystem`) and the `<gazebo><plugin filename="gz_ros2_control-system"
+name="gz_ros2_control::GazeboSimROS2ControlPlugin">` system plugin are new.
+
+**Verified live and working:** `gz sim -r empty.sdf` boots; the robot spawns via `ros_gz_sim create`;
+all three controllers (`joint_state_broadcaster`, `panda_arm_controller`, `panda_hand_controller`)
+configure and activate; `/joint_states` publishes at a measured **99 Hz**; `/clock` publishes. The
+same `RegisterEventHandler(OnProcessExit(...))` pattern used for `demo.launch.py`'s controller race
+(see above) chains spawn → controllers → `run_job`.
+
+**Blocked:** `run_job` still fails with `Unable to configure planning scene monitor` after a 10 s
+wait, even though `/joint_states` is flowing. Root cause, confirmed with live diagnostics at each
+step (not guessed):
+
+1. `gz_ros2_control` stamps `/joint_states` with **simulated** time (from the bridged `/clock`);
+   `moveit_py`'s node runs on the **wall clock**. Every MoveIt freshness check that compares a
+   message timestamp against its own `now()` then fails - `Requested time <wall>, but latest
+   received state has time <sim>`.
+2. The textbook fix, `use_sim_time: true` on the MoveIt node, is blocked by
+   [moveit2#2940](https://github.com/moveit/moveit2/issues/2940) (closed as not planned): MoveItPy
+   throws `rclcpp::exceptions::InvalidParameterValueException` on
+   `qos_overrides./clock.subscription.durability` when `use_sim_time` is injected via `config_dict`.
+   Reproduced here exactly.
+3. Setting `planning_scene_monitor_options.wait_for_initial_state_timeout: 0.0` (rung 1 of the
+   attempted fix) does skip that specific gate and lets `Approach` **plan successfully** - but
+   `TrajectoryExecutionManager` has its **own, separate, hardcoded 1-second freshness check**
+   (`Failed to validate trajectory: couldn't receive full current joint state within 1s`, not
+   exposed as a `moveit_cpp.yaml` parameter at all), which then fails execution instead.
+4. A republishing relay (`src/astra_ros/nodes/joint_state_restamp.py`) was built to work around both
+   gates at once: it subscribes `/joint_states` and republishes identical data with a wall-clock
+   stamp on `/joint_states_wall`, confirmed live at 99 Hz with the correct wall-clock timestamp.
+   `config/moveit_cpp_gazebo.yaml` points `planning_scene_monitor_options.joint_state_topic` at this
+   new topic.
+5. **This did not work**, and the reason is now precisely characterized rather than assumed: `ros2
+   node info` on the live MoveIt node during the 10 s window shows it subscribed to `/joint_states`
+   directly - **not** `/joint_states_wall` - despite `moveit_config.to_dict()` confirmed (checked
+   directly, outside any launch context) to contain `joint_state_topic: '/joint_states_wall'`
+   correctly. `planning_scene_monitor_options.joint_state_topic` is accepted without error but does
+   not appear to control the actual `CurrentStateMonitor` subscription in this installed `moveit_py`
+   version - a second, undocumented quirk on top of moveit2#2940.
+
+**Next step (not yet implemented):** since MoveIt subscribes to the literal name `/joint_states`
+regardless of configuration, the fix has to happen upstream of that name instead - remap
+`gz_ros2_control`'s `joint_state_broadcaster` to publish on a different topic (e.g.
+`/joint_states_raw`) and point `joint_state_restamp.py` at consuming that name while publishing the
+wall-stamped result onto the name `/joint_states` itself, which nothing then needs to be told to
+look for. This is more involved than the current wiring because the Gazebo-embedded controller
+manager (created by the `gz_ros2_control` SDF plugin inside the `gz_sim` process) is not a directly
+launchable `Node` action this repo's launch file controls, unlike `ros2_control_node` in the
+`mock_components` path.
+
+**Current state:** the simulator, robot model, physics, and controller stack are fully verified
+working; only the MoveIt-side clock integration remains open. `demo.launch.py` (`mock_components`,
+RViz) - which the assessment spec explicitly permits as the simulator - remains the verified,
+delivered demo path in the meantime.
+
 ## Bugs fixed in this repo's own code during live testing
 
 - `launch/demo.launch.py`: `additional_env={"PYTHONPATH": ...}` was **replacing** the ROS-sourced

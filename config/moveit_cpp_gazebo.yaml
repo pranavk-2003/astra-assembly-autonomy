@@ -1,0 +1,38 @@
+# Gazebo variant of moveit_cpp.yaml (see that file's header for why this
+# nested config is needed at all).
+#
+# Root cause (see docs/moveit2_integration_notes.md): gz_ros2_control stamps
+# /joint_states with SIMULATED time (from the bridged /clock), while this
+# node runs on the WALL clock, because moveit_py cannot be given
+# use_sim_time: true - doing so throws
+# rclcpp::exceptions::InvalidParameterValueException on
+# "qos_overrides./clock.subscription.durability", a known, unresolved
+# upstream bug (github.com/moveit/moveit2/issues/2940, closed as not
+# planned). Every MoveIt freshness check that compares a message timestamp
+# against wall-clock now() then fails - not just PlanningSceneMonitor's
+# initial-state wait, but also TrajectoryExecutionManager's own hardcoded 1s
+# pre-execution check ("couldn't receive full current joint state within
+# 1s"), which isn't configurable via this file at all.
+#
+# Fix: joint_state_topic points at /joint_states_wall, published by
+# astra_ros.nodes.joint_state_restamp - a small relay (started by
+# demo_gazebo.launch.py) that republishes /joint_states with a wall-clock
+# stamp. Both freshness gates then see correctly-domained timestamps, so
+# wait_for_initial_state_timeout can stay at its normal, meaningful value.
+planning_scene_monitor_options:
+  name: "planning_scene_monitor"
+  robot_description: "robot_description"
+  joint_state_topic: "/joint_states_wall"
+  attached_collision_object_topic: "/moveit_cpp/planning_scene_monitor"
+  publish_planning_scene_topic: "/moveit_cpp/publish_planning_scene"
+  monitored_planning_scene_topic: "/moveit_cpp/monitored_planning_scene"
+  wait_for_initial_state_timeout: 10.0
+
+planning_pipelines:
+  pipeline_names: ["ompl"]
+
+plan_request_params:
+  planning_attempts: 1
+  planning_pipeline: ompl
+  max_velocity_scaling_factor: 1.0
+  max_acceleration_scaling_factor: 1.0

@@ -24,16 +24,28 @@ from astra_ros.moveit_scene_adapter import MoveItSceneAdapter
 from astra_ros.ros_execution_adapter import ROSExecutionAdapter
 
 
-def build_moveit_py(node_name: str = "astra_run_job") -> MoveItPy:
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def build_moveit_py(node_name: str = "astra_run_job", moveit_cpp_config: str | None = None) -> MoveItPy:
+    moveit_cpp_path = moveit_cpp_config or str(REPO_ROOT / "config" / "moveit_cpp.yaml")
     moveit_config = (
         MoveItConfigsBuilder("moveit_resources_panda")
         .robot_description(file_path="config/panda.urdf.xacro")
         .robot_description_semantic(file_path="config/panda.srdf")
         .trajectory_execution(file_path="config/gripper_moveit_controllers.yaml")
         .planning_pipelines(pipelines=["ompl"])
-        .moveit_cpp(file_path=str(Path(__file__).resolve().parents[3] / "config" / "moveit_cpp.yaml"))
+        .moveit_cpp(file_path=moveit_cpp_path)
         .to_moveit_configs()
     )
+    # NOTE: use_sim_time is deliberately NOT set here. MoveItPy throws
+    # rclcpp::exceptions::InvalidParameterValueException on
+    # "qos_overrides./clock.subscription.durability" when use_sim_time is
+    # injected via config_dict - a known, unresolved upstream bug
+    # (github.com/moveit/moveit2/issues/2940, closed as not planned).
+    # demo_gazebo.launch.py instead selects moveit_cpp_gazebo.yaml, which
+    # works around the resulting sim/wall clock mismatch a different way
+    # (see that file and docs/moveit2_integration_notes.md).
     return MoveItPy(node_name=node_name, config_dict=moveit_config.to_dict())
 
 
@@ -45,13 +57,14 @@ def main(argv: list[str] | None = None) -> int:
     # this is checked as a string before conversion.
     parser.add_argument("--correction", type=str, default="")
     parser.add_argument("--confidence-threshold", type=float, default=0.90)
+    parser.add_argument("--moveit-cpp-config", type=str, default="")
     args = parser.parse_args(argv)
 
     recipe = load_recipe(args.recipe)
     correction = load_correction(Path(args.correction)) if args.correction else None
 
     rclpy.init()
-    moveit_py = build_moveit_py()
+    moveit_py = build_moveit_py(moveit_cpp_config=args.moveit_cpp_config or None)
     try:
         logger = TraceLogger(job_id=recipe.job_id, out_path=Path("logs") / f"{recipe.job_id}.jsonl")
         ctx = SkillContext(

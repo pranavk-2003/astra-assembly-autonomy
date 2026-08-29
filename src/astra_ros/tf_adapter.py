@@ -44,18 +44,26 @@ def to_planning_frame(pose: Pose) -> Pose:
 # docs/moveit2_integration_notes.md for the live evidence).
 #
 # Fix, scoped to this adapter only (never astra_core): override the goal
-# orientation with a fixed down-facing quaternion (180 deg about X) before
-# handing a target to MoveIt2. This is a real robot/cell calibration, exactly
-# analogous to WORLD_TO_BASE above, and belongs at the same seam.
+# orientation with a down-facing gripper, ROLLED about the vertical (now-
+# approach) axis by the part's own yaw, before handing a target to MoveIt2.
+# This is a real robot/cell calibration, exactly analogous to WORLD_TO_BASE
+# above, and belongs at the same seam.
 #
-# Known limitation: this ignores the part's own yaw (rotation about the
-# approach axis) - every supplied recipe uses approach_vector [0, 0, -1]
-# uniformly, so a fixed down-facing orientation is sufficient to demonstrate
-# collision-free planning, but a production version would compose this base
-# rotation with the part's yaw about the (now-vertical) approach axis so the
-# gripper's finger orientation still matches the part.
-GRIPPER_DOWN_QUAT_XYZW = Rotation.from_euler("xyz", [np.pi, 0.0, 0.0]).as_quat()
+# A first version used a FIXED down-facing quaternion (ignoring the part's
+# yaw entirely). That planned and executed without collision, but visually
+# drove the gripper straight through the part rather than straddling it -
+# "collision-free" isn't "correctly aligned to grasp": every supplied recipe
+# uses approach_vector [0, 0, -1] uniformly, so a fixed down-facing base
+# orientation is the right choice for the approach AXIS, but the roll about
+# that axis must still track the part's yaw so the gripper's finger-closing
+# direction (perpendicular to the part's long axis) lines up with the part,
+# and so the carried part's long axis matches its recipe orientation instead
+# of a fixed one (this was also the root cause of the exclusion-zone collision
+# on Retreat documented in docs/moveit2_integration_notes.md).
+GRIPPER_DOWN_BASE = Rotation.from_euler("xyz", [np.pi, 0.0, 0.0])
 
 
 def calibrate_gripper_orientation(pose: Pose) -> Pose:
-    return Pose(xyz=pose.xyz, quat_xyzw=GRIPPER_DOWN_QUAT_XYZW)
+    yaw = pose.to_rpy()[2]
+    composed = Rotation.from_euler("z", yaw) * GRIPPER_DOWN_BASE
+    return Pose(xyz=pose.xyz, quat_xyzw=composed.as_quat())

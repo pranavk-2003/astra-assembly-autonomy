@@ -4,11 +4,16 @@ Data-driven robotic assembly autonomy layer for the ASTRA Robotics technical ass
 and Variant B run through identical orchestrator/skill/planner code; every part, joint and obstacle
 pose comes from the recipe JSON, never from source.
 
-**Status: M0-M2 complete.** The pure-Python core (recipe loading, pose math, world model, skill
+**Status: M0-M3 complete.** The pure-Python core (recipe loading, pose math, world model, skill
 layer, FSM orchestrator, recovery policy, trace logging) runs both variants end to end with mock
-planner/execution/scene adapters - no ROS, no simulator required. MoveIt2 integration (M3), the
-launch files and demo recordings (M4), and the full 12-section submission README (M5) are the next
-milestones.
+planner/execution/scene adapters - no ROS, no simulator required. `src/astra_ros/` now also has real
+MoveIt2 adapters (OMPL planner, PlanningScene, MoveItPy execution) wired through
+`launch/demo.launch.py`, verified live: the **unmodified** orchestrator/skill/recovery code ran
+against a real OMPL planner and drove the exact designed recovery sequence
+(REPLAN -> REPLAN -> SAFE_POSE -> OPERATOR_PAUSE) on a genuine planning failure - see
+`docs/moveit2_integration_notes.md` for the full account, the live log, and one open geometry-layer
+limitation (grasp-orientation reachability) documented there with its fix. Demo recordings (M4) and
+the full 12-section submission README (M5) are next.
 
 ## Quick start
 
@@ -24,6 +29,10 @@ python -m astra_core.cli --recipe recipes/ASTRA_Pranav_Variant_B.json \
   --correction recipes/ASTRA_Pranav_Failure_Injection.json          # rejected, operator pause
 
 cat logs/ASTRA_PRANAV_B.jsonl | python3 -m json.tool --json-lines   # R10 trace log
+
+# Real MoveIt2 planner (needs ROS2 Jazzy + moveit_resources_panda_moveit_config sourced):
+source /opt/ros/jazzy/setup.bash
+ros2 launch launch/demo.launch.py use_rviz:=false recipe:=recipes/ASTRA_Pranav_Variant_A.json
 ```
 
 ## Layout
@@ -32,7 +41,15 @@ cat logs/ASTRA_PRANAV_B.jsonl | python3 -m json.tool --json-lines   # R10 trace 
   math, world model, perception gate, skill layer, FSM orchestrator, recovery policy, trace logger.
 - `src/astra_sim/` - headless mock Planner/Execution/Scene port implementations plus a deterministic
   `FaultInjector`, used by the CLI demo and the test suite.
-- `src/astra_ros/` - reserved for the MoveIt2 adapters (M3); the only place MoveIt2 types will appear.
+- `src/astra_ros/` - the MoveIt2 adapters (planner/scene/execution) and the `run_job` node; the only
+  place MoveIt2/ROS types appear.
+- `launch/demo.launch.py` - full stack (robot_state_publisher, ros2_control, controller spawners,
+  RViz, our node) for `ros2 launch`.
+- `config/moveit_cpp.yaml` - MoveItPy-specific pipeline/scene-monitor parameters (see
+  `docs/moveit2_integration_notes.md` for why this file is needed in addition to the standard
+  `MoveItConfigsBuilder` chain).
+- `docs/moveit2_integration_notes.md` - the M3 integration story: what's verified live, four
+  environment ABI fixes made along the way, and the one open geometry-layer limitation.
 - `recipes/` - the four supplied job/correction JSON files, unmodified.
 - `tests/fixtures/` - malformed recipes for negative tests; the only other place a literal part/joint
   id is allowed to appear.

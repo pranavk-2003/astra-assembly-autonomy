@@ -26,9 +26,12 @@ falls over" bug - the upstream URDF has no real joint anchoring the base, only a
 virtual joint with no effect on physics), `Approach` and `Pick` both plan, execute under real physics
 and verify successfully, and `Retreat` correctly hits the same genuine `keepout` collision as the
 mock-hardware run. `member_A`/`member_B` and both obstacles are also spawned as real, physical Gazebo
-models (`gz model --list` confirms), not just MoveIt/RViz planning-scene geometry - though the actual
-grasp is still MoveIt-only for now, the box doesn't yet physically follow the gripper in Gazebo (a
-real physical grip needs `gz_sim`'s `DetachableJoint` system, not yet wired). Getting here needed
+models (`gz model --list` confirms), not just MoveIt/RViz planning-scene geometry. `Pick`/`Place` now
+also drive the real `panda_hand_controller` (a `GripperCommand` action, already wired by upstream
+`gripper_moveit_controllers.yaml`) through the SRDF's own `hand` group `open`/`close` states, so the
+gripper's fingers genuinely open and close in Gazebo - but the grasp is still MoveIt-scene-only: the
+carried part doesn't yet kinematically follow the gripper once it's lifted, since that needs
+`gz_sim`'s `DetachableJoint` system (not yet wired). Getting here needed
 working around an upstream MoveIt2 bug closed as not planned
 ([moveit2#2940](https://github.com/moveit/moveit2/issues/2940)) plus a second, undocumented MoveIt
 quirk, three rounds of startup-race fixes, and a couple of real-physics-specific tuning fixes - all

@@ -4,14 +4,27 @@ spec, the Planner Adapter is the only place cuRobo/MoveIt2 types appear - the wo
 model side of that boundary lives here alongside moveit_planner_adapter.py)."""
 from __future__ import annotations
 
+import numpy as np
 from moveit.planning import MoveItPy
 from moveit_msgs.msg import AttachedCollisionObject, CollisionObject
+from scipy.spatial.transform import Rotation
 from shape_msgs.msg import SolidPrimitive
 
 from astra_core.geometry.pose import Pose
 from astra_core.ports.scene_port import ScenePort
 from astra_core.recipe.models import Shape
 from astra_ros.ros_conversions import PLANNING_FRAME, to_pose_msg
+
+
+def _pose_to_matrix(pose: Pose) -> np.ndarray:
+    m = np.eye(4)
+    m[:3, :3] = pose.rotation().as_matrix()
+    m[:3, 3] = pose.xyz
+    return m
+
+
+def _matrix_to_pose(m: np.ndarray) -> Pose:
+    return Pose(xyz=m[:3, 3], quat_xyzw=Rotation.from_matrix(m[:3, :3]).as_quat())
 
 # Gripper links that must be allowed to touch/overlap a part during the final
 # grasp descent (before attach()) - otherwise the goal pose reports as in
@@ -40,9 +53,11 @@ class MoveItSceneAdapter(ScenePort):
         self._planning_group = planning_group
         self._frame_id = frame_id
         self._shapes: dict[str, Shape] = {}
+        self._poses: dict[str, Pose] = {}
 
     def add_object(self, object_id: str, shape: Shape, pose: Pose) -> None:
         self._shapes[object_id] = shape
+        self._poses[object_id] = pose
         with self._moveit_py.get_planning_scene_monitor().read_write() as scene:
             scene.apply_collision_object(_box_collision_object(object_id, shape, pose, self._frame_id))
             scene.current_state.update()
@@ -53,11 +68,29 @@ class MoveItSceneAdapter(ScenePort):
         self.add_object(object_id, self._shapes[object_id], pose)
 
     def attach(self, object_id: str) -> None:
+        # Root cause of the carried-part orientation bug (see
+        # docs/moveit2_integration_notes.md): omitting attached.object.pose
+        # defaults the body to identity relative to panda_hand, so the part
+        # swings to whatever orientation the gripper link itself has -
+        # decoupled from the part's actual recipe orientation. Fix: compute
+        # the part's pose RELATIVE to the gripper at the moment of grasp
+        # (gripper_pose^-1 . part_world_pose) and attach it there, so the
+        # carried part keeps its own orientation as the gripper moves.
         with self._moveit_py.get_planning_scene_monitor().read_write() as scene:
+            gripper_matrix = scene.current_state.get_global_link_transform("panda_hand")
+            part_matrix = _pose_to_matrix(self._poses[object_id])
+            relative_pose = _matrix_to_pose(np.linalg.inv(gripper_matrix) @ part_matrix)
+
             attached = AttachedCollisionObject()
             attached.link_name = "panda_hand"
+            attached.object.header.frame_id = "panda_hand"
             attached.object.id = object_id
             attached.object.operation = CollisionObject.ADD
+            primitive = SolidPrimitive()
+            primitive.type = SolidPrimitive.BOX
+            primitive.dimensions = [float(v) for v in self._shapes[object_id].size]
+            attached.object.primitives = [primitive]
+            attached.object.primitive_poses = [to_pose_msg(relative_pose)]
             attached.touch_links = GRIPPER_LINKS
             scene.process_attached_collision_object(attached)
             scene.current_state.update()

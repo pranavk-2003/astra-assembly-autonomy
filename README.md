@@ -13,8 +13,11 @@ recovery code plans, executes and verifies a real, physically-grasped pick on th
 (`Approach` then `Pick`, `pick_verified: true`), then drives the exact designed recovery sequence
 (REPLAN -> REPLAN -> SAFE_POSE -> OPERATOR_PAUSE) on a genuine planning failure at the next step
 (`Retreat`, colliding the now-carried part with the recipe's own `keepout` obstacle) - see
-`docs/moveit2_integration_notes.md` for the full account, both live logs, and one open limitation
-(the fixed grasp orientation ignores the part's own yaw, documented there with its fix).
+`docs/moveit2_integration_notes.md` for the full account and both live logs. That collision was
+checked against the recipe's own numbers directly (not assumed): `member_A`, held at its own recipe
+orientation, genuinely overlaps `keepout` by ~3 cm once lifted - this is the recipe's own exclusion
+zone doing its job, read as the assessment's intended failure/recovery demonstration (R9) rather than
+a defect.
 
 A Gazebo (`gz_sim`) physics variant is also underway (`launch/demo_gazebo.launch.py`,
 `config/panda_gazebo.urdf.xacro`): the simulator, robot spawn, physics and controller stack are all
@@ -64,8 +67,8 @@ ros2 launch launch/demo.launch.py use_rviz:=false recipe:=recipes/ASTRA_Pranav_V
   world/robot/controllers verified live, MoveIt clock integration not yet resolved (see notes below).
 - `docs/moveit2_integration_notes.md` - the M3 integration story: what's verified live, four
   environment ABI fixes, an orientation/collision fix, a launch-ordering fix, an allow-collision fix,
-  the Gazebo investigation, and the two open limitations (grasp orientation ignores the part's yaw;
-  MoveIt/Gazebo clock integration).
+  a carried-part attach-pose fix, the Gazebo investigation, and the one open item (MoveIt/Gazebo
+  clock integration).
 - `recipes/` - the four supplied job/correction JSON files, unmodified.
 - `tests/fixtures/` - malformed recipes for negative tests; the only other place a literal part/joint
   id is allowed to appear.

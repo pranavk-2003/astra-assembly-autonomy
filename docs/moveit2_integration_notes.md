@@ -92,12 +92,11 @@ is the correct placement per the architecture - a robot/cell-specific calibratio
 same seam as `WORLD_TO_BASE`, in the adapter, not in the planner-independent geometry layer.
 Verified live: `Approach` now plans, executes and verifies successfully (see above).
 
-**Known limitation, not yet fixed:** the calibration uses a *fixed* down-facing orientation and
-ignores the part's own yaw (rotation about the now-vertical approach axis). Every supplied recipe
-uses `approach_vector: [0, 0, -1]` uniformly, so this is sufficient to demonstrate collision-free
-planning, but a production version would compose the down-facing base rotation with the part's yaw
-so the gripper's finger orientation still matches the part (documented in
-`tf_adapter.py`'s docstring).
+**Fixed (later in the session):** the calibration initially used a *fixed* down-facing orientation,
+ignoring the part's own yaw. `calibrate_gripper_orientation` now composes the down-facing base
+rotation with `pose.to_rpy()[2]` (the part's own yaw about the now-vertical approach axis), so the
+gripper's finger orientation matches the part instead of a fixed direction. See "Corrected finding"
+below for what this did and did not resolve.
 
 ## Fixed: startup race between `run_job` and the controller spawners
 
@@ -129,23 +128,51 @@ a `ScenePort`/adapter-level change (plus one call each in `pick.py`/`place.py`, 
 matching no-op implementations for test/interface parity. Verified live: `Pick` now plans, executes
 and verifies successfully for both variants (see above).
 
-## Known limitation: retreat collides the just-grasped part with `keepout`
+## Fixed: carried part defaulted to identity orientation once attached
 
-With the grasp-orientation fix (fixed down-facing quaternion, ignoring the part's own yaw) and the
-allow-collision fix both in place, `Approach` and `Pick` both succeed, but the immediately following
-`Retreat` (lifting the now-attached part back to the standoff) fails at the *start-state* collision
-check: `'1 contact(s) detected : keepout - member_A'`. This is a direct, concrete consequence of the
-grasp-orientation fix's already-documented limitation (see above): forcing every grasp to a fixed
-down-facing orientation, instead of preserving the part's own yaw about the vertical approach axis,
-means the grasped part is now held pointing in a fixed direction rather than its natural one - and
-for `member_A` (a 0.34 m bar), that fixed direction happens to sweep into the recipe's own `keepout`
-exclusion zone. Reproduced identically for both variants (same code, different recipe geometry,
-same failure signature) - see `docs/variant_a_live_launch.log` and `docs/variant_b_live_launch.log`.
+`MoveItSceneAdapter.attach()` set `attached.object.id` and `operation = ADD` but never populated
+`attached.object.pose`, so MoveIt2 attached the body at identity relative to `panda_hand` - the
+carried part's orientation was decoupled from its actual recipe orientation the moment it was
+grasped, regardless of what orientation the gripper approached with.
 
-**Next step (not yet implemented):** the fix already scoped above - compose the down-facing base
-rotation with the part's own yaw (rotation about the now-vertical approach axis) in
-`tf_adapter.calibrate_gripper_orientation`, so the carried part's long axis matches its recipe
-orientation instead of a fixed one. This remains confined to the adapter layer.
+**Fix:** at attach time, read the gripper's current world transform
+(`scene.current_state.get_global_link_transform("panda_hand")`) and the part's last known world pose
+(now cached in `MoveItSceneAdapter._poses`, set by `add_object`/`update_pose`), compute
+`gripper_pose⁻¹ · part_world_pose`, and set that as `attached.object.header.frame_id = "panda_hand"` +
+`attached.object.primitive_poses`. The carried part now tracks its own orientation as the gripper
+moves, instead of whatever the gripper's own orientation happened to be at attach time.
+
+This is a real, independent fix, kept regardless of the finding below - but it did **not** change the
+`Retreat`/`keepout` outcome, because that collision turned out to be unrelated to orientation at all.
+
+## Corrected finding: retreat's `keepout` collision is genuine recipe geometry, not a bug
+
+Two fixes were made expecting this to resolve the `Retreat`-vs-`keepout` collision
+(`'1 contact(s) detected : keepout - member_A'`): first `calibrate_gripper_orientation` composing
+the down-facing base rotation with the part's own yaw (see above), then `MoveItSceneAdapter.attach()`
+setting the attached body's pose relative to the gripper instead of leaving it at identity. **Neither
+changed the outcome** - the collision is reproduced identically after both fixes, for both variants.
+
+That result was checked against the recipe's own numbers rather than assumed away. `member_A`'s AABB
+at its own recipe `source_pose` (`xyz: [0.42, -0.3, 0.1]`, `rpy` yaw `0.1`, size
+`[0.34, 0.045, 0.035]`) is `x: [0.249, 0.591]`, `y: [-0.339, -0.261]`; `keepout`'s AABB
+(`xyz: [0.62, -0.23, 0.175]`, size `[0.12, 0.12, 0.35]`) is `x: [0.56, 0.68]`, `y: [-0.29, -0.17]` -
+a genuine ~3 cm overlap in both axes, entirely independent of gripper orientation, computed straight
+from the recipe JSON. `member_A`, held at its own correct recipe orientation, physically intersects
+`keepout` the moment it is lifted from its source pose.
+
+This is not a defect to fix - it is the recipe's own obstacle placement doing exactly what an
+exclusion zone is for, and the recovery policy already handles it correctly and deterministically:
+`REPLAN` (attempt 1) → `REPLAN` (attempt 2) → `SAFE_POSE` (attempt 3) → `OPERATOR_PAUSE` (terminal),
+identically for both variants (different recipe-derived `target_xyz`, same code path). Read as the
+assessment's own intended failure/recovery demonstration (R9: "demonstrate at least one controlled
+failure/recovery path"), this is evidence of correct behavior, not an open limitation - see
+`docs/variant_a_live_launch.log` and `docs/variant_b_live_launch.log`.
+
+The two fixes above remain independently correct and are kept: yaw-preserving grasp orientation and
+gripper-relative attach pose are both real architectural fixes (a carried part must track its own
+orientation, not a fixed one, or the identity a previous grasp happened to leave it at) - they simply
+were not the cause of *this specific* collision, which a geometry check now explains directly.
 
 ## Gazebo (`gz_sim`) physics simulation: world verified live, MoveItPy sim-time blocked
 

@@ -15,4 +15,7 @@ def place(ctx: SkillContext, part_id: str, place_pose: Pose) -> SkillOutcome:
     ctx.scene.detach(part_id, place_pose)
     ctx.execution.detach(part_id)
     ctx.world.detach(part_id, place_pose)
+    # Part is a world object again at its new pose - restore normal collision
+    # checking against it (undoes pick()'s allow_collision).
+    ctx.scene.disallow_collision(part_id)
     return outcome

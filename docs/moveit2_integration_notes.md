@@ -16,22 +16,27 @@ Captured evidence: `docs/variant_a_live_launch.log`, `docs/variant_b_live_launch
 1. **`Approach` (the pick-approach standoff pose) plans, executes and verifies successfully on the
    real robot** - real OMPL plan, real `ros2_control` trajectory execution
    (`trajectory_execution_manager: Completed trajectory execution with status SUCCEEDED`), real
-   `VERIFY` state logged `result: ok`. This is a genuine, physically-executed (in `mock_components`
-   simulation) motion, not a mocked one.
-2. `Pick` (the final descent onto the grasp pose) then fails with `GOAL_STATE_INVALID` - see "Known
-   limitation" below; this is a different, well-understood issue from the ones fixed along the way.
-3. `MoveItPlannerAdapter` mapped that to `FailureReason.COLLISION` -> `FailureClass.PLANNING_COLLISION`.
-4. The **unmodified** recovery policy drove the exact designed sequence - `REPLAN` (attempt 1) ->
+   `VERIFY` state logged `result: ok`.
+2. **`Pick` (the final descent onto the grasp pose) also plans, executes and verifies successfully**
+   - real plan, real execution, and `pick_verified: true` - a genuine, physically-executed
+   (in `mock_components` simulation) pick, not a mocked one. This needed the allow-collision fix
+   below; without it `Pick` failed the same way `Approach` originally did.
+3. `Retreat` (moving the now-attached part back up to the standoff) then fails with the same
+   collision code - see "Known limitation" below; a different, well-understood issue from the ones
+   fixed along the way, and a direct consequence of an already-documented gap.
+4. `MoveItPlannerAdapter` mapped that to `FailureReason.COLLISION` -> `FailureClass.PLANNING_COLLISION`.
+5. The **unmodified** recovery policy drove the exact designed sequence - `REPLAN` (attempt 1) ->
    `REPLAN` (attempt 2) -> `SAFE_POSE` (attempt 3) -> `OPERATOR_PAUSE` (terminal) - logged with
    `failure_class`/`action`/`attempt` at every step, identically for both variants (different
    recipe-derived `target_xyz`, same code path - R7 live).
-5. The job ended deterministically at `operator_paused`, matching the mock-planner test suite's
-   behavior for the same failure class.
+6. The job ended deterministically at `operator_paused` (2/13 steps completed), matching the
+   mock-planner test suite's behavior for the same failure class.
 
-This is the core M3 claim proven, now with an actual successful real-robot motion inside it: **the
-orchestrator, skill layer and recovery policy are planner-independent in fact, not just in
-principle** - they ran, unchanged, against a real collision-aware planner instead of `astra_sim`'s
-mocks, executed a real trajectory, and recovered deterministically from a real planning failure.
+This is the core M3 claim proven, now with a genuine successful pick inside it: **the orchestrator,
+skill layer and recovery policy are planner-independent in fact, not just in principle** - they ran,
+unchanged, against a real collision-aware planner instead of `astra_sim`'s mocks, executed and
+verified a real grasp, and recovered deterministically from a real planning failure immediately
+after.
 
 ## Environment issues found and fixed along the way
 
@@ -105,22 +110,42 @@ in `launch/demo.launch.py` - `run_job` now starts only once the spawner it actua
 exited (spawners are one-shot: they exit after their controller is loaded and activated). This is
 the deterministic ROS2 pattern for this kind of dependency, not a fixed delay.
 
-## Known limitation: grasp-pose collision (the final descent onto the part)
+## Fixed: grasp-pose collision (the final descent onto the part)
 
-With both fixes above in place, `Approach` succeeds but the next step, `Pick` (descending from the
-standoff to the actual grasp pose, which necessarily puts the gripper around/overlapping the part),
-fails with the same `GOAL_STATE_INVALID`/collision code - because MoveIt2 has no reason yet to allow
-the gripper to overlap the part it is about to grasp. This is a well-known, standard part of MoveIt2
-pick-and-place (it's exactly what MoveIt Task Constructor's `ModifyPlanningScene` "allow collision"
-stage exists for): before planning the final grasp descent, the object-to-be-grasped needs to be
-temporarily marked as an allowed collision with the gripper links, then that allowance revoked (or
-made permanent as "attached") once the grasp is confirmed.
+`Pick` originally failed the same way `Approach` originally did - `GOAL_STATE_INVALID` - because
+MoveIt2 had no reason to allow the gripper to overlap the part it was about to grasp. This is a
+well-known, standard part of MoveIt2 pick-and-place (it's exactly what MoveIt Task Constructor's
+`ModifyPlanningScene` "allow collision" stage exists for): before planning the final grasp descent,
+the object-to-be-grasped needs to be temporarily marked as an allowed collision with the gripper
+links.
 
-**Next step (not yet implemented):** extend `ScenePort` with an `allow_collision(object_id, link_names)`
-call (or fold it into the existing `attach()` semantics, called slightly earlier - before the final
-`Pick` plan rather than after execution), implemented in `MoveItSceneAdapter` via
-`AllowedCollisionMatrix` entries on the `PlanningScene`. This is a `ScenePort`/adapter-level change,
-not an orchestrator, skill, or recovery-policy change - the same pattern as the two fixes above.
+**Fix:** extended `ScenePort` with `allow_collision(object_id)` / `disallow_collision(object_id)`,
+implemented in `MoveItSceneAdapter` via `AllowedCollisionMatrix.set_entry(object_id, link, True)` for
+each gripper link (`panda_hand`, `panda_leftfinger`, `panda_rightfinger`). `skills/pick.py` calls
+`allow_collision` immediately before planning the grasp descent; `skills/place.py` calls
+`disallow_collision` after `detach`, once the part is a world object again at its new pose. This is
+a `ScenePort`/adapter-level change (plus one call each in `pick.py`/`place.py`, which already talk to
+`ScenePort` for `attach`/`detach`) - not an orchestrator or recovery-policy change. `MockScene` grew
+matching no-op implementations for test/interface parity. Verified live: `Pick` now plans, executes
+and verifies successfully for both variants (see above).
+
+## Known limitation: retreat collides the just-grasped part with `keepout`
+
+With the grasp-orientation fix (fixed down-facing quaternion, ignoring the part's own yaw) and the
+allow-collision fix both in place, `Approach` and `Pick` both succeed, but the immediately following
+`Retreat` (lifting the now-attached part back to the standoff) fails at the *start-state* collision
+check: `'1 contact(s) detected : keepout - member_A'`. This is a direct, concrete consequence of the
+grasp-orientation fix's already-documented limitation (see above): forcing every grasp to a fixed
+down-facing orientation, instead of preserving the part's own yaw about the vertical approach axis,
+means the grasped part is now held pointing in a fixed direction rather than its natural one - and
+for `member_A` (a 0.34 m bar), that fixed direction happens to sweep into the recipe's own `keepout`
+exclusion zone. Reproduced identically for both variants (same code, different recipe geometry,
+same failure signature) - see `docs/variant_a_live_launch.log` and `docs/variant_b_live_launch.log`.
+
+**Next step (not yet implemented):** the fix already scoped above - compose the down-facing base
+rotation with the part's own yaw (rotation about the now-vertical approach axis) in
+`tf_adapter.calibrate_gripper_orientation`, so the carried part's long axis matches its recipe
+orientation instead of a fixed one. This remains confined to the adapter layer.
 
 ## Bugs fixed in this repo's own code during live testing
 

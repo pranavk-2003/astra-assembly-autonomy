@@ -10,6 +10,10 @@ from astra_core.skills.base import SkillContext, SkillOutcome, plan_and_execute
 
 def pick(ctx: SkillContext, part_id: str, part_pose: Pose, grasp_offset_xyz) -> SkillOutcome:
     grasp_pose = derive_grasp_pose(part_pose, grasp_offset_xyz)
+    # The final grasp descent necessarily puts the gripper around/overlapping
+    # the part - a planner otherwise reports the goal as in collision with the
+    # very object being grasped (R3/R5; see docs/moveit2_integration_notes.md).
+    ctx.scene.allow_collision(part_id)
     outcome = plan_and_execute(ctx, "Pick", grasp_pose)
     if not outcome.success:
         return outcome

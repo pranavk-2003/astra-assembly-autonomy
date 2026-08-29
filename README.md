@@ -9,13 +9,13 @@ layer, FSM orchestrator, recovery policy, trace logging) runs both variants end 
 planner/execution/scene adapters - no ROS, no simulator required. `src/astra_ros/` now also has real
 MoveIt2 adapters (OMPL planner, PlanningScene, MoveItPy execution) wired through
 `launch/demo.launch.py`, verified live for both variants: the **unmodified** orchestrator/skill/
-recovery code plans, executes and verifies a real collision-aware motion on the real robot
-(`Approach`), then drives the exact designed recovery sequence
+recovery code plans, executes and verifies a real, physically-grasped pick on the real robot
+(`Approach` then `Pick`, `pick_verified: true`), then drives the exact designed recovery sequence
 (REPLAN -> REPLAN -> SAFE_POSE -> OPERATOR_PAUSE) on a genuine planning failure at the next step
-(`Pick`) - see `docs/moveit2_integration_notes.md` for the full account, both live logs, and one
-open limitation (allowing gripper/part collision for the final grasp descent - a standard MoveIt2
-pick-and-place step, documented there with its fix). Demo recordings (M4) and the full 12-section
-submission README (M5) are next.
+(`Retreat`, colliding the now-carried part with the recipe's own `keepout` obstacle) - see
+`docs/moveit2_integration_notes.md` for the full account, both live logs, and one open limitation
+(the fixed grasp orientation ignores the part's own yaw, documented there with its fix). Demo
+recordings (M4) and the full 12-section submission README (M5) are next.
 
 ## Quick start
 
@@ -51,8 +51,8 @@ ros2 launch launch/demo.launch.py use_rviz:=false recipe:=recipes/ASTRA_Pranav_V
   `docs/moveit2_integration_notes.md` for why this file is needed in addition to the standard
   `MoveItConfigsBuilder` chain).
 - `docs/moveit2_integration_notes.md` - the M3 integration story: what's verified live, four
-  environment ABI fixes, an orientation/collision fix and a launch-ordering fix made along the way,
-  and the one open limitation (allowing gripper/part collision for the grasp descent).
+  environment ABI fixes, an orientation/collision fix, a launch-ordering fix and an allow-collision
+  fix made along the way, and the one open limitation (grasp orientation ignores the part's yaw).
 - `recipes/` - the four supplied job/correction JSON files, unmodified.
 - `tests/fixtures/` - malformed recipes for negative tests; the only other place a literal part/joint
   id is allowed to appear.

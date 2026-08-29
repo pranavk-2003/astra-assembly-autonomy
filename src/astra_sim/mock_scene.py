@@ -30,3 +30,9 @@ class MockScene(ScenePort):
         self.attached_ids.discard(object_id)
         self.update_pose(object_id, pose)
         self.calls.append(("detach", object_id))
+
+    def allow_collision(self, object_id: str) -> None:
+        self.calls.append(("allow_collision", object_id))
+
+    def disallow_collision(self, object_id: str) -> None:
+        self.calls.append(("disallow_collision", object_id))

@@ -4,7 +4,6 @@ spec, the Planner Adapter is the only place cuRobo/MoveIt2 types appear - the wo
 model side of that boundary lives here alongside moveit_planner_adapter.py)."""
 from __future__ import annotations
 
-from moveit.core.planning_scene import PlanningScene
 from moveit.planning import MoveItPy
 from moveit_msgs.msg import AttachedCollisionObject, CollisionObject
 from shape_msgs.msg import SolidPrimitive
@@ -13,6 +12,12 @@ from astra_core.geometry.pose import Pose
 from astra_core.ports.scene_port import ScenePort
 from astra_core.recipe.models import Shape
 from astra_ros.ros_conversions import PLANNING_FRAME, to_pose_msg
+
+# Gripper links that must be allowed to touch/overlap a part during the final
+# grasp descent (before attach()) - otherwise the goal pose reports as in
+# collision with the very object being grasped (see
+# docs/moveit2_integration_notes.md: "Known limitation: grasp-pose collision").
+GRIPPER_LINKS = ["panda_hand", "panda_leftfinger", "panda_rightfinger"]
 
 
 def _box_collision_object(object_id: str, shape: Shape, pose: Pose, frame_id: str) -> CollisionObject:
@@ -53,7 +58,7 @@ class MoveItSceneAdapter(ScenePort):
             attached.link_name = "panda_hand"
             attached.object.id = object_id
             attached.object.operation = CollisionObject.ADD
-            attached.touch_links = ["panda_hand", "panda_leftfinger", "panda_rightfinger"]
+            attached.touch_links = GRIPPER_LINKS
             scene.process_attached_collision_object(attached)
             scene.current_state.update()
 
@@ -67,3 +72,17 @@ class MoveItSceneAdapter(ScenePort):
             scene.current_state.update()
         # detaching drops it back into the world at the place pose
         self.update_pose(object_id, pose)
+
+    def allow_collision(self, object_id: str) -> None:
+        with self._moveit_py.get_planning_scene_monitor().read_write() as scene:
+            acm = scene.allowed_collision_matrix
+            for link in GRIPPER_LINKS:
+                acm.set_entry(object_id, link, True)
+            scene.current_state.update()
+
+    def disallow_collision(self, object_id: str) -> None:
+        with self._moveit_py.get_planning_scene_monitor().read_write() as scene:
+            acm = scene.allowed_collision_matrix
+            for link in GRIPPER_LINKS:
+                acm.set_entry(object_id, link, False)
+            scene.current_state.update()

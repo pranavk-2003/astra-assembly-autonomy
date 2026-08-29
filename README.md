@@ -19,14 +19,21 @@ orientation, genuinely overlaps `keepout` by ~3 cm once lifted - this is the rec
 zone doing its job, read as the assessment's intended failure/recovery demonstration (R9) rather than
 a defect.
 
-A Gazebo (`gz_sim`) physics variant is also underway (`launch/demo_gazebo.launch.py`,
-`config/panda_gazebo.urdf.xacro`): the simulator, robot spawn, physics and controller stack are all
-verified working live (real gravity/contact, `/joint_states` at 99 Hz), but MoveIt's clock
-integration with Gazebo's simulated time hits an upstream bug
-([moveit2#2940](https://github.com/moveit/moveit2/issues/2940)) plus a second, undocumented quirk -
-both precisely characterized with live evidence in `docs/moveit2_integration_notes.md`, not yet
-resolved. `demo.launch.py` (`mock_components` + RViz, which the assessment spec explicitly permits as
-the simulator) remains the verified, delivered demo path in the meantime.
+A Gazebo (`gz_sim`) physics variant (`launch/demo_gazebo.launch.py`, `config/panda_gazebo.urdf.xacro`)
+now runs the same sequence under real gravity and contact, verified live for both variants with RViz
+and the Gazebo GUI running together: the robot is anchored to the ground (fixing an initial "arm
+falls over" bug - the upstream URDF has no real joint anchoring the base, only a MoveIt-only SRDF
+virtual joint with no effect on physics), `Approach` and `Pick` both plan, execute under real physics
+and verify successfully, and `Retreat` correctly hits the same genuine `keepout` collision as the
+mock-hardware run. `member_A`/`member_B` and both obstacles are also spawned as real, physical Gazebo
+models (`gz model --list` confirms), not just MoveIt/RViz planning-scene geometry - though the actual
+grasp is still MoveIt-only for now, the box doesn't yet physically follow the gripper in Gazebo (a
+real physical grip needs `gz_sim`'s `DetachableJoint` system, not yet wired). Getting here needed
+working around an upstream MoveIt2 bug closed as not planned
+([moveit2#2940](https://github.com/moveit/moveit2/issues/2940)) plus a second, undocumented MoveIt
+quirk, three rounds of startup-race fixes, and a couple of real-physics-specific tuning fixes - all
+precisely characterized with live evidence in `docs/moveit2_integration_notes.md`. `demo.launch.py`
+(`mock_components` + RViz) remains available as the simpler, zero-physics-tuning path.
 
 Demo recordings (M4) and the full 12-section submission README (M5) are next.
 
@@ -63,12 +70,18 @@ ros2 launch launch/demo.launch.py use_rviz:=false recipe:=recipes/ASTRA_Pranav_V
 - `config/moveit_cpp.yaml` - MoveItPy-specific pipeline/scene-monitor parameters (see
   `docs/moveit2_integration_notes.md` for why this file is needed in addition to the standard
   `MoveItConfigsBuilder` chain).
-- `launch/demo_gazebo.launch.py`, `config/panda_gazebo.urdf.xacro` - real-physics (`gz_sim`) variant;
-  world/robot/controllers verified live, MoveIt clock integration not yet resolved (see notes below).
-- `docs/moveit2_integration_notes.md` - the M3 integration story: what's verified live, four
-  environment ABI fixes, an orientation/collision fix, a launch-ordering fix, an allow-collision fix,
-  a carried-part attach-pose fix, the Gazebo investigation, and the one open item (MoveIt/Gazebo
-  clock integration).
+- `launch/demo_gazebo.launch.py`, `config/panda_gazebo.urdf.xacro`,
+  `config/ros2_controllers_gazebo.yaml` - real-physics (`gz_sim`) variant, verified working
+  end-to-end for both variants (see `docs/moveit2_integration_notes.md`).
+- `src/astra_ros/gazebo_scene_adapter.py` - spawns real physical box models in Gazebo for every
+  part/obstacle, composed alongside `MoveItSceneAdapter` via `CompositeSceneAdapter`
+  (`demo_gazebo.launch.py` only).
+- `src/astra_ros/nodes/joint_state_restamp.py` - works around the MoveIt/Gazebo clock mismatch
+  (`demo_gazebo.launch.py` only; see `docs/moveit2_integration_notes.md`).
+- `docs/moveit2_integration_notes.md` - the full M3 integration story: what's verified live, four
+  environment ABI fixes, an orientation/collision fix, an allow-collision fix, a carried-part
+  attach-pose fix, and the full Gazebo account (clock mismatch, base-anchor, three rounds of
+  startup-race fixes, real object spawning, and the still-open real-physical-grasp item).
 - `recipes/` - the four supplied job/correction JSON files, unmodified.
 - `tests/fixtures/` - malformed recipes for negative tests; the only other place a literal part/joint
   id is allowed to appear.

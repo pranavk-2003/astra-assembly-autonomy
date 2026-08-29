@@ -42,7 +42,12 @@ def generate_launch_description():
     # demo.launch.py, so robot_description comes from OUR xacro instead.
     moveit_config = (
         MoveItConfigsBuilder("moveit_resources_panda")
-        .robot_description(file_path=os.path.join(REPO_ROOT, "config", "panda_gazebo.urdf.xacro"))
+        .robot_description(
+            file_path=os.path.join(REPO_ROOT, "config", "panda_gazebo.urdf.xacro"),
+            mappings={
+                "controllers_config_path": os.path.join(REPO_ROOT, "config", "ros2_controllers_gazebo.yaml"),
+            },
+        )
         .robot_description_semantic(file_path="config/panda.srdf")
         .trajectory_execution(file_path="config/gripper_moveit_controllers.yaml")
         .planning_pipelines(pipelines=["ompl"])
@@ -88,9 +93,10 @@ def generate_launch_description():
     )
 
     # See src/astra_ros/nodes/joint_state_restamp.py and
-    # docs/moveit2_integration_notes.md: works around moveit2#2940 by
-    # republishing /joint_states with a wall-clock stamp on /joint_states_wall,
-    # which config/moveit_cpp_gazebo.yaml's joint_state_topic points at.
+    # docs/moveit2_integration_notes.md: works around moveit2#2940. The xacro's
+    # gz_ros2_control plugin remaps its raw output to /joint_states_raw; this
+    # node republishes it wall-clock-stamped on the default /joint_states name
+    # everything else (MoveItPy included) already expects.
     joint_state_restamp_node = ExecuteProcess(
         cmd=["python3", "-m", "astra_ros.nodes.joint_state_restamp"],
         cwd=REPO_ROOT,
@@ -144,13 +150,19 @@ def generate_launch_description():
             "python3", "-m", "astra_ros.nodes.run_job",
             "--recipe", LaunchConfiguration("recipe"),
             "--correction", LaunchConfiguration("correction"),
-            # moveit_cpp_gazebo.yaml (not the default moveit_cpp.yaml) works
-            # around gz_ros2_control stamping /joint_states with simulated
-            # time while this node cannot be given use_sim_time (rclcpp
-            # throws on the /clock QoS-override parameter - see
-            # docs/moveit2_integration_notes.md and
-            # github.com/moveit/moveit2/issues/2940).
-            "--moveit-cpp-config", os.path.join(REPO_ROOT, "config", "moveit_cpp_gazebo.yaml"),
+            # Default moveit_cpp.yaml is fine here (same as demo.launch.py) -
+            # panda_gazebo.urdf.xacro's gz_ros2_control plugin already remaps
+            # its raw joint states off "/joint_states" so
+            # joint_state_restamp.py can own that name with a wall-clock
+            # stamp; no MoveIt-side redirect needed. See
+            # docs/moveit2_integration_notes.md.
+            #
+            # allowed_start_tolerance widened: real physics means the arm is
+            # still micro-settling from the previous motion when the next
+            # trajectory starts - mock_components has no such lag, so this
+            # only applies here.
+            "--allowed-start-tolerance", "0.05",
+            "--spawn-in-gazebo",
         ],
         cwd=REPO_ROOT,
         additional_env={
@@ -170,9 +182,52 @@ def generate_launch_description():
             on_exit=[joint_state_broadcaster_spawner, panda_arm_controller_spawner, panda_hand_controller_spawner],
         )
     )
+    # A spawner reporting "Configured and activated" does not guarantee the
+    # controller's FollowJointTrajectory action server is registered yet
+    # inside the Gazebo-embedded controller_manager - a gap the earlier
+    # 10-second MoveItPy planning-scene-monitor bug was accidentally masking
+    # (see docs/moveit2_integration_notes.md, "three rounds"). A plain fixed
+    # delay was tried and found flaky (worked with RViz off, raced again with
+    # RViz on and its extra CPU load). Polling `ros2 action list` alone is
+    # ALSO flaky on its own: a fresh `ros2 action list` process completing its
+    # own DDS discovery does not guarantee run_job's (about-to-start) action
+    # CLIENT will have finished its own separate discovery/matching by the
+    # same instant. Combine both: wait for the action to genuinely exist in
+    # the graph, then a short fixed margin for the client-side race.
+    wait_for_arm_controller = ExecuteProcess(
+        cmd=[
+            "bash", "-c",
+            "until ros2 action list 2>/dev/null | grep -q "
+            "'/panda_arm_controller/follow_joint_trajectory'; do sleep 0.2; done",
+        ],
+        output="log",
+    )
     run_job_after_controllers = RegisterEventHandler(
         OnProcessExit(
             target_action=panda_arm_controller_spawner,
+            on_exit=[wait_for_arm_controller],
+        )
+    )
+    # The action-server check above proves the CONTROLLER exists, not that
+    # /joint_states (the actual dependency run_job's CurrentStateMonitor
+    # needs) is flowing yet - a third, distinct instance of the same
+    # DDS-discovery-timing pattern (confirmed live: MoveItPy still timed out
+    # with "latest received state has time 0.000000" even after the
+    # action-server check passed). Wait on that dependency directly instead
+    # of a fixed margin guessing at it.
+    wait_for_joint_states = ExecuteProcess(
+        cmd=["bash", "-c", "timeout 15 ros2 topic echo /joint_states --once >/dev/null 2>&1"],
+        output="log",
+    )
+    joint_states_after_action_server_ready = RegisterEventHandler(
+        OnProcessExit(
+            target_action=wait_for_arm_controller,
+            on_exit=[wait_for_joint_states],
+        )
+    )
+    run_job_after_joint_states_ready = RegisterEventHandler(
+        OnProcessExit(
+            target_action=wait_for_joint_states,
             on_exit=[run_job_node],
         )
     )
@@ -191,5 +246,7 @@ def generate_launch_description():
             rviz_node,
             controllers_after_spawn,
             run_job_after_controllers,
+            joint_states_after_action_server_ready,
+            run_job_after_joint_states_ready,
         ]
     )

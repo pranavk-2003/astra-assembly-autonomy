@@ -19,6 +19,7 @@ from astra_core.orchestrator.job_runner import run_job
 from astra_core.recipe.loader import load_correction, load_recipe
 from astra_core.skills.base import SkillContext
 from astra_core.trace.logger import TraceLogger
+from astra_ros.gazebo_scene_adapter import CompositeSceneAdapter, GazeboSceneAdapter
 from astra_ros.moveit_planner_adapter import MoveItPlannerAdapter
 from astra_ros.moveit_scene_adapter import MoveItSceneAdapter
 from astra_ros.ros_execution_adapter import ROSExecutionAdapter
@@ -27,7 +28,11 @@ from astra_ros.ros_execution_adapter import ROSExecutionAdapter
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
-def build_moveit_py(node_name: str = "astra_run_job", moveit_cpp_config: str | None = None) -> MoveItPy:
+def build_moveit_py(
+    node_name: str = "astra_run_job",
+    moveit_cpp_config: str | None = None,
+    allowed_start_tolerance: float | None = None,
+) -> MoveItPy:
     moveit_cpp_path = moveit_cpp_config or str(REPO_ROOT / "config" / "moveit_cpp.yaml")
     moveit_config = (
         MoveItConfigsBuilder("moveit_resources_panda")
@@ -42,11 +47,21 @@ def build_moveit_py(node_name: str = "astra_run_job", moveit_cpp_config: str | N
     # rclcpp::exceptions::InvalidParameterValueException on
     # "qos_overrides./clock.subscription.durability" when use_sim_time is
     # injected via config_dict - a known, unresolved upstream bug
-    # (github.com/moveit/moveit2/issues/2940, closed as not planned).
-    # demo_gazebo.launch.py instead selects moveit_cpp_gazebo.yaml, which
-    # works around the resulting sim/wall clock mismatch a different way
-    # (see that file and docs/moveit2_integration_notes.md).
-    return MoveItPy(node_name=node_name, config_dict=moveit_config.to_dict())
+    # (github.com/moveit/moveit2/issues/2940, closed as not planned). The
+    # sim/wall clock mismatch this causes is instead worked around at the
+    # topic level (see docs/moveit2_integration_notes.md,
+    # src/astra_ros/nodes/joint_state_restamp.py).
+    config_dict = moveit_config.to_dict()
+    if allowed_start_tolerance is not None:
+        # gripper_moveit_controllers.yaml's default (0.01 rad) assumes
+        # mock_components' zero-lag fake hardware. Under real physics
+        # (demo_gazebo.launch.py), the arm is still micro-settling from the
+        # previous motion by the time the next trajectory starts, and
+        # TrajectoryExecutionManager rejects it as "start point deviates
+        # from current robot state" - a real dynamics effect mock hardware
+        # never exhibits, not a bug. Widened for that launch only.
+        config_dict["trajectory_execution"]["allowed_start_tolerance"] = allowed_start_tolerance
+    return MoveItPy(node_name=node_name, config_dict=config_dict)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -58,19 +73,33 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--correction", type=str, default="")
     parser.add_argument("--confidence-threshold", type=float, default=0.90)
     parser.add_argument("--moveit-cpp-config", type=str, default="")
+    parser.add_argument("--allowed-start-tolerance", type=float, default=None)
+    parser.add_argument(
+        "--spawn-in-gazebo",
+        action="store_true",
+        help="also spawn/move real physical box models in Gazebo for every part/obstacle "
+        "(demo_gazebo.launch.py only) - keeps MoveIt's own planning-scene collision "
+        "model unchanged, adds a real Gazebo presence alongside it via CompositeSceneAdapter",
+    )
     args = parser.parse_args(argv)
 
     recipe = load_recipe(args.recipe)
     correction = load_correction(Path(args.correction)) if args.correction else None
 
     rclpy.init()
-    moveit_py = build_moveit_py(moveit_cpp_config=args.moveit_cpp_config or None)
+    moveit_py = build_moveit_py(
+        moveit_cpp_config=args.moveit_cpp_config or None,
+        allowed_start_tolerance=args.allowed_start_tolerance,
+    )
     try:
         logger = TraceLogger(job_id=recipe.job_id, out_path=Path("logs") / f"{recipe.job_id}.jsonl")
+        scene = MoveItSceneAdapter(moveit_py)
+        if args.spawn_in_gazebo:
+            scene = CompositeSceneAdapter([scene, GazeboSceneAdapter()])
         ctx = SkillContext(
             planner=MoveItPlannerAdapter(moveit_py),
             execution=ROSExecutionAdapter(moveit_py),
-            scene=MoveItSceneAdapter(moveit_py),
+            scene=scene,
             logger=logger,
             job_id=recipe.job_id,
         )

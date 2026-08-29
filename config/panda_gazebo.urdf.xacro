@@ -14,8 +14,24 @@ initial_positions.yaml) - a robot calibration constant, not recipe/product
 geometry.
 -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+  <xacro:arg name="controllers_config_path"
+             default="$(find moveit_resources_panda_moveit_config)/config/ros2_controllers.yaml" />
 
   <xacro:include filename="$(find moveit_resources_panda_description)/urdf/panda.urdf.xacro" />
+
+  <!-- moveit_resources_panda_description's URDF has no joint at all
+       anchoring panda_link0 to anything - the SRDF's virtual_joint (world ->
+       panda_link0, type "floating") is a MoveIt-only planning construct with
+       no effect on Gazebo physics. Under mock_components (no physics) this
+       is invisible; under real gravity the whole robot is an unanchored free
+       body and topples over (confirmed live). Fix: a real fixed joint,
+       matching astra_ros.tf_adapter's WORLD_TO_BASE identity assumption. -->
+  <link name="world"/>
+  <joint name="world_to_panda_link0" type="fixed">
+    <parent link="world"/>
+    <child link="panda_link0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
 
   <ros2_control name="PandaGazeboSystem" type="system">
     <hardware>
@@ -69,7 +85,16 @@ geometry.
 
   <gazebo>
     <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-      <parameters>$(find moveit_resources_panda_moveit_config)/config/ros2_controllers.yaml</parameters>
+      <parameters>$(arg controllers_config_path)</parameters>
+      <!-- Remap the raw (simulated-time-stamped) joint_states off its default
+           name so astra_ros.nodes.joint_state_restamp can own the name
+           "/joint_states" instead - see docs/moveit2_integration_notes.md
+           ("Gazebo (gz_sim) physics simulation") for why MoveItPy's
+           CurrentStateMonitor cannot itself be redirected to a renamed
+           topic. -->
+      <ros>
+        <remapping>/joint_states:=/joint_states_raw</remapping>
+      </ros>
     </plugin>
   </gazebo>
 

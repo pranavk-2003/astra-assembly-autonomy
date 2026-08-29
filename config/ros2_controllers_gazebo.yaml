@@ -1,0 +1,51 @@
+# Gazebo variant of moveit_resources_panda_moveit_config's ros2_controllers.yaml
+# (copied, not modified in place - that file belongs to a vendored system
+# package). Adds gz_ros_control.position_proportional_gain: mock_components
+# needs no dynamics tuning at all, but gz_ros2_control's position command
+# interface converts position error into a velocity setpoint
+# (joint_velocity = gain * error * update_rate) - with the library default
+# (0.1) this is too weak to hold Panda's real link masses against gravity
+# once idle, and the arm visibly sags/collapses (confirmed live). Per
+# gz_ros2_control's own docs the gain must stay <= 1.0 to avoid oscillation,
+# so this is a partial mitigation, not a full fix - a real fix would use an
+# effort command interface with proper PID/gravity compensation instead of
+# position, a materially larger change not made this session (see
+# docs/moveit2_integration_notes.md).
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    panda_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    panda_hand_controller:
+      type: position_controllers/GripperActionController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+
+panda_arm_controller:
+  ros__parameters:
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    joints:
+      - panda_joint1
+      - panda_joint2
+      - panda_joint3
+      - panda_joint4
+      - panda_joint5
+      - panda_joint6
+      - panda_joint7
+    allow_nonzero_velocity_at_trajectory_end: true
+
+panda_hand_controller:
+  ros__parameters:
+    joint: panda_finger_joint1
+
+gz_ros_control:
+  ros__parameters:
+    position_proportional_gain: 0.5

@@ -1,204 +1,240 @@
-[INFO] [launch]: All log files can be found below /home/pranav/.ros/log/2026-08-29-18-21-19-088040-vivobook-68722
+[INFO] [launch]: All log files can be found below /home/pranav/.ros/log/2026-08-29-18-57-25-922553-vivobook-102346
 [INFO] [launch]: Default logging verbosity is set to INFO
-[INFO] [static_transform_publisher-1]: process started with pid [68728]
-[INFO] [robot_state_publisher-2]: process started with pid [68729]
-[INFO] [ros2_control_node-3]: process started with pid [68730]
-[INFO] [spawner-4]: process started with pid [68731]
-[INFO] [spawner-5]: process started with pid [68732]
-[INFO] [spawner-6]: process started with pid [68733]
-[INFO] [python3-7]: process started with pid [68734]
-[static_transform_publisher-1] [WARN] [1788007879.296608386] []: Old-style arguments are deprecated; see --help for new-style arguments
-[static_transform_publisher-1] [INFO] [1788007879.320564867] [static_transform_publisher]: Spinning until stopped - publishing transform
+[INFO] [static_transform_publisher-1]: process started with pid [102352]
+[INFO] [robot_state_publisher-2]: process started with pid [102353]
+[INFO] [ros2_control_node-3]: process started with pid [102354]
+[INFO] [spawner-4]: process started with pid [102355]
+[INFO] [spawner-5]: process started with pid [102356]
+[INFO] [spawner-6]: process started with pid [102357]
+[static_transform_publisher-1] [WARN] [1788010046.128289856] []: Old-style arguments are deprecated; see --help for new-style arguments
+[static_transform_publisher-1] [INFO] [1788010046.144502521] [static_transform_publisher]: Spinning until stopped - publishing transform
 [static_transform_publisher-1] translation: ('0.000000', '0.000000', '0.000000')
 [static_transform_publisher-1] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
 [static_transform_publisher-1] from 'world' to 'panda_link0'
-[robot_state_publisher-2] [WARN] [1788007879.323469511] [kdl_parser]: The root link panda_link0 has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
-[robot_state_publisher-2] [INFO] [1788007879.323643170] [robot_state_publisher]: Robot initialized
-[ros2_control_node-3] [INFO] [1788007879.341299614] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
-[ros2_control_node-3] [INFO] [1788007879.345973390] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
-[ros2_control_node-3] [INFO] [1788007879.348790287] [controller_manager]: update rate is 100 Hz
-[ros2_control_node-3] [INFO] [1788007879.348823089] [controller_manager]: Overruns handling is : enabled
-[ros2_control_node-3] [INFO] [1788007879.348830313] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
-[ros2_control_node-3] [WARN] [1788007879.348909202] [controller_manager]: Could not enable FIFO RT scheduling policy: with error number <1>(Operation not permitted). See [https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html] for details on how to enable realtime scheduling.
-[ros2_control_node-3] [INFO] [1788007879.509939300] [controller_manager]: Received robot description from topic.
-[ros2_control_node-3] [INFO] [1788007879.510016596] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
-[ros2_control_node-3] [INFO] [1788007879.513152799] [controller_manager]: Loading hardware 'PandaFakeSystem' 
-[ros2_control_node-3] [INFO] [1788007879.513769517] [controller_manager]: Loaded hardware 'PandaFakeSystem' from plugin 'mock_components/GenericSystem'
-[ros2_control_node-3] [INFO] [1788007879.513869527] [controller_manager]: Initialize hardware 'PandaFakeSystem' 
-[ros2_control_node-3] [INFO] [1788007879.521726042] [controller_manager]: Successful initialization of hardware 'PandaFakeSystem'
-[ros2_control_node-3] [INFO] [1788007879.522005031] [controller_manager]: Loading hardware 'PandaHandFakeSystem' 
-[ros2_control_node-3] [INFO] [1788007879.522046890] [controller_manager]: Loaded hardware 'PandaHandFakeSystem' from plugin 'mock_components/GenericSystem'
-[ros2_control_node-3] [INFO] [1788007879.522097647] [controller_manager]: Initialize hardware 'PandaHandFakeSystem' 
-[ros2_control_node-3] [INFO] [1788007879.529499962] [controller_manager]: Successful initialization of hardware 'PandaHandFakeSystem'
-[ros2_control_node-3] [INFO] [1788007879.529728906] [controller_manager]: Activating component 'PandaHandFakeSystem'.
-[ros2_control_node-3] [INFO] [1788007879.529753833] [resource_manager]: 'configure' hardware 'PandaHandFakeSystem' 
-[ros2_control_node-3] [INFO] [1788007879.529770034] [resource_manager]: Successful 'configure' of hardware 'PandaHandFakeSystem'
-[ros2_control_node-3] [INFO] [1788007879.529779572] [resource_manager]: 'activate' hardware 'PandaHandFakeSystem' 
-[ros2_control_node-3] [INFO] [1788007879.529793077] [resource_manager]: Successful 'activate' of hardware 'PandaHandFakeSystem'
-[ros2_control_node-3] [INFO] [1788007879.529883218] [controller_manager]: Activating component 'PandaFakeSystem'.
-[ros2_control_node-3] [INFO] [1788007879.529894940] [resource_manager]: 'configure' hardware 'PandaFakeSystem' 
-[ros2_control_node-3] [INFO] [1788007879.529909658] [resource_manager]: Successful 'configure' of hardware 'PandaFakeSystem'
-[ros2_control_node-3] [INFO] [1788007879.529917353] [resource_manager]: 'activate' hardware 'PandaFakeSystem' 
-[ros2_control_node-3] [INFO] [1788007879.529923254] [resource_manager]: Successful 'activate' of hardware 'PandaFakeSystem'
-[ros2_control_node-3] [INFO] [1788007879.529948261] [controller_manager]: Registering statistics for : PandaHandFakeSystem
-[ros2_control_node-3] [INFO] [1788007879.530043432] [controller_manager]: Registering statistics for : PandaFakeSystem
-[ros2_control_node-3] [INFO] [1788007879.530186012] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
-[spawner-4] [INFO] [1788007879.784771000] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
-[ros2_control_node-3] [INFO] [1788007880.037039991] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
-[ros2_control_node-3] [INFO] [1788007880.037077502] [controller_manager]: Loading controller 'joint_state_broadcaster'
-[ros2_control_node-3] [INFO] [1788007880.044281972] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /tmp/launch_params_b90cz5k9 --params-file /opt/ros/jazzy/share/moveit_resources_panda_moveit_config/config/ros2_controllers.yaml 
-[spawner-4] [INFO] [1788007880.060668731] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
-[ros2_control_node-3] [INFO] [1788007880.061617428] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
-[ros2_control_node-3] [INFO] [1788007880.061758826] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
-[python3-7] [INFO] [1788007880.074677032] [moveit_3216203281.moveit.py.cpp_initializer]: Initialize rclcpp
-[python3-7] [INFO] [1788007880.074723450] [moveit_3216203281.moveit.py.cpp_initializer]: Initialize node parameters
-[python3-7] [INFO] [1788007880.074732908] [moveit_3216203281.moveit.py.cpp_initializer]: Initialize node and executor
-[ros2_control_node-3] [INFO] [1788007880.080646172] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
-[python3-7] [INFO] [1788007880.080750310] [moveit_3216203281.moveit.py.cpp_initializer]: Spin separate thread
-[python3-7] [INFO] [1788007880.082925421] [moveit_3216203281.moveit.ros.rdf_loader]: Loaded robot model in 0.00203369 seconds
-[python3-7] [INFO] [1788007880.082968392] [moveit_3216203281.moveit.core.robot_model]: Loading robot model 'panda'...
-[python3-7] [WARN] [1788007880.089051438] [kdl_parser]: The root link panda_link0 has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
-[python3-7] [INFO] [1788007880.089117223] [moveit_3216203281.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'panda_arm': 1 1 1 1 1 1 1
-[ros2_control_node-3] [INFO] [1788007880.089446847] [controller_manager]: Successfully switched controllers!
-[spawner-4] [INFO] [1788007880.101159429] [spawner_joint_state_broadcaster]: Configured and activated joint_state_broadcaster
-[python3-7] [INFO] [1788007880.113428706] [moveit_3216203281.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
-[python3-7] [INFO] [1788007880.113561929] [moveit_3216203281.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
-[python3-7] [INFO] [1788007880.114831915] [moveit_3216203281.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
-[python3-7] [INFO] [1788007880.115277229] [moveit_3216203281.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
-[python3-7] [INFO] [1788007880.115292999] [moveit_3216203281.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
-[python3-7] [INFO] [1788007880.115387257] [moveit_3216203281.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
-[python3-7] [INFO] [1788007880.115649424] [moveit_3216203281.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
-[python3-7] [INFO] [1788007880.115706031] [moveit_3216203281.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
-[python3-7] [INFO] [1788007880.116164520] [moveit_3216203281.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
-[python3-7] [INFO] [1788007880.116180580] [moveit_3216203281.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
-[python3-7] [INFO] [1788007880.116505856] [moveit_3216203281.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
-[python3-7] [INFO] [1788007880.116802709] [moveit_3216203281.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
-[python3-7] [WARN] [1788007880.117053354] [moveit_3216203281.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
-[python3-7] [ERROR] [1788007880.117070937] [moveit_3216203281.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
-[python3-7] [INFO] [1788007880.215306166] [moveit_3216203281.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
-[ros2_control_node-3] [INFO] [1788007880.215568393] [controller_manager]: Loading controller : 'panda_arm_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
-[ros2_control_node-3] [INFO] [1788007880.215600203] [controller_manager]: Loading controller 'panda_arm_controller'
-[python3-7] [INFO] [1788007880.216298516] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
-[python3-7] [INFO] [1788007880.218000180] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
-[python3-7] [INFO] [1788007880.218015840] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
-[python3-7] [INFO] [1788007880.218214216] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
-[python3-7] [INFO] [1788007880.218228393] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
-[python3-7] [INFO] [1788007880.218261455] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
-[python3-7] [INFO] [1788007880.218271013] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
-[python3-7] [INFO] [1788007880.218286473] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
-[python3-7] [INFO] [1788007880.219129801] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
-[ros2_control_node-3] [INFO] [1788007880.221446831] [controller_manager]: Controller 'panda_arm_controller' node arguments: --ros-args --params-file /tmp/launch_params_b90cz5k9 --params-file /opt/ros/jazzy/share/moveit_resources_panda_moveit_config/config/ros2_controllers.yaml 
-[python3-7] [INFO] [1788007880.223599509] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
-[python3-7] [INFO] [1788007880.223622593] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
-[python3-7] [INFO] [1788007880.227268261] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
-[python3-7] [INFO] [1788007880.227289090] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
-[python3-7] [INFO] [1788007880.227801832] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
-[python3-7] [INFO] [1788007880.252499227] [moveit_3216203281.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for panda_arm_controller
-[python3-7] [INFO] [1788007880.252567596] [moveit_3216203281.moveit.plugins.simple_controller_manager]: panda_hand_controller will command a max effort of: 0
-[python3-7] [INFO] [1788007880.254791590] [moveit_3216203281.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for panda_hand_controller
-[python3-7] [INFO] [1788007880.254931074] [moveit_3216203281.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
-[python3-7] [INFO] [1788007880.254956001] [moveit_3216203281.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
-[spawner-5] [INFO] [1788007880.255379935] [spawner_panda_arm_controller]: Loaded panda_arm_controller
-[python3-7] [INFO] [1788007880.255399191] [moveit_3216203281.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
-[ros2_control_node-3] [INFO] [1788007880.256352878] [controller_manager]: Configuring controller: 'panda_arm_controller'
-[ros2_control_node-3] [INFO] [1788007880.256594696] [panda_arm_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
-[ros2_control_node-3] [INFO] [1788007880.256631145] [panda_arm_controller]: Command interfaces are [position] and state interfaces are [position velocity].
-[ros2_control_node-3] [INFO] [1788007880.256653438] [panda_arm_controller]: Using 'splines' interpolation method.
-[python3-7] {"ts": 1788007880.2565904, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "LOAD_JOB"}
-[python3-7] {"ts": 1788007880.2567995, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VALIDATE"}
-[INFO] [spawner-4]: process has finished cleanly [pid 68731]
-[ros2_control_node-3] [INFO] [1788007880.259218858] [panda_arm_controller]: Action status changes will be monitored at 20.00 Hz.
-[ros2_control_node-3] [INFO] [1788007880.264049381] [panda_arm_controller]: Setting initial scaling factor to 1.000000
-[ros2_control_node-3] [INFO] [1788007880.264071272] [panda_arm_controller]: No scaling interface set. This controller will not read speed scaling from the hardware.
-[ros2_control_node-3] [INFO] [1788007880.270867620] [controller_manager]: Activating controllers: [ panda_arm_controller ]
-[ros2_control_node-3] [INFO] [1788007880.279585698] [controller_manager]: Successfully switched controllers!
-[spawner-5] [INFO] [1788007880.290717219] [spawner_panda_arm_controller]: Configured and activated panda_arm_controller
-[python3-7] {"ts": 1788007880.3757973, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "BUILD_WORLD"}
-[python3-7] {"ts": 1788007880.3759952, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 0, "skill": "member_A:pick_approach"}
-[python3-7] [WARN] [1788007880.376594272] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
-[python3-7] [WARN] [1788007880.376627726] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
-[python3-7] [INFO] [1788007880.376848334] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
-[python3-7] [INFO] [1788007880.376935399] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
-[python3-7] [WARN] [1788007880.376944406] [moveit_3216203281.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
-[python3-7] [INFO] [1788007880.376961408] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
-[python3-7] [INFO] [1788007880.376982428] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
-[python3-7] [INFO] [1788007880.381986339] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'panda_arm' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
-[python3-7] [INFO] [1788007880.383079380] [astra_run_job]: Calling Planner 'OMPL'
-[spawner-6] [INFO] [1788007880.428175745] [spawner_panda_hand_controller]: waiting for service /controller_manager/list_controllers to become available...
-[INFO] [spawner-5]: process has finished cleanly [pid 68732]
-[python3-7] [ERROR] [1788007881.389885611] [moveit_3216203281.moveit.planners.ompl.planner_manager]: ./src/ompl/geometric/planners/rrt/src/RRTConnect.cpp:265 - panda_arm/panda_arm: Unable to sample any valid states for goal tree
-[python3-7] [WARN] [1788007881.389989798] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Invalid goal state
-[python3-7] [ERROR] [1788007881.429540546] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Unable to solve the planning problem
-[python3-7] [ERROR] [1788007881.429622661] [astra_run_job]: Planner 'OMPL' failed with error code GOAL_STATE_INVALID
-[python3-7] {"ts": 1788007881.4299407, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.42, -0.3, 0.245], "plan_success": false, "plan_time_ms": 1053.697, "failure_reason": "planning_failed"}
-[python3-7] {"ts": 1788007881.4301221, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 0, "skill": "member_A:pick_approach", "success": false}
-[python3-7] {"ts": 1788007881.4302185, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 0, "skill": "member_A:pick_approach", "failure_class": "planning_collision", "action": "replan", "attempt": 0}
-[python3-7] {"ts": 1788007881.4303036, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "REPLAN_RETRY", "step_index": 0, "action": "replan"}
-[python3-7] {"ts": 1788007881.4304032, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 0, "skill": "member_A:pick_approach"}
-[python3-7] [WARN] [1788007881.430787839] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
-[python3-7] [WARN] [1788007881.430812266] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
-[python3-7] [INFO] [1788007881.430975064] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
-[python3-7] [INFO] [1788007881.431027333] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
-[python3-7] [WARN] [1788007881.431036160] [moveit_3216203281.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
-[python3-7] [INFO] [1788007881.431048253] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
-[python3-7] [INFO] [1788007881.431062019] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
-[python3-7] [INFO] [1788007881.431310279] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'panda_arm' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
-[python3-7] [INFO] [1788007881.431562056] [astra_run_job]: Calling Planner 'OMPL'
-[ros2_control_node-3] [INFO] [1788007881.680848996] [controller_manager]: Loading controller : 'panda_hand_controller' of type 'position_controllers/GripperActionController'
-[ros2_control_node-3] [INFO] [1788007881.680893771] [controller_manager]: Loading controller 'panda_hand_controller'
-[ros2_control_node-3] [INFO] [1788007881.683921899] [controller_manager]: Controller 'panda_hand_controller' node arguments: --ros-args --params-file /tmp/launch_params_b90cz5k9 --params-file /opt/ros/jazzy/share/moveit_resources_panda_moveit_config/config/ros2_controllers.yaml 
-[ros2_control_node-3] [WARN] [1788007881.693404626] [panda_hand_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
-[spawner-6] [INFO] [1788007881.701409463] [spawner_panda_hand_controller]: Loaded panda_hand_controller
-[ros2_control_node-3] [INFO] [1788007881.702696451] [controller_manager]: Configuring controller: 'panda_hand_controller'
-[ros2_control_node-3] [INFO] [1788007881.702771153] [panda_hand_controller]: Action status changes will be monitored at 20.000000 Hz.
-[ros2_control_node-3] [INFO] [1788007881.710931104] [controller_manager]: Activating controllers: [ panda_hand_controller ]
-[ros2_control_node-3] [INFO] [1788007881.723169933] [controller_manager]: Successfully switched controllers!
-[spawner-6] [INFO] [1788007881.730915729] [spawner_panda_hand_controller]: Configured and activated panda_hand_controller
-[INFO] [spawner-6]: process has finished cleanly [pid 68733]
-[python3-7] [ERROR] [1788007882.438431877] [moveit_3216203281.moveit.planners.ompl.planner_manager]: ./src/ompl/geometric/planners/rrt/src/RRTConnect.cpp:265 - panda_arm/panda_arm: Unable to sample any valid states for goal tree
-[python3-7] [WARN] [1788007882.438525304] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Invalid goal state
-[python3-7] [ERROR] [1788007882.445619396] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Unable to solve the planning problem
-[python3-7] [ERROR] [1788007882.445701071] [astra_run_job]: Planner 'OMPL' failed with error code GOAL_STATE_INVALID
-[python3-7] {"ts": 1788007882.4458551, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.42, -0.3, 0.245], "plan_success": false, "plan_time_ms": 1015.213, "failure_reason": "planning_failed"}
-[python3-7] {"ts": 1788007882.4460309, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 0, "skill": "member_A:pick_approach", "success": false}
-[python3-7] {"ts": 1788007882.446121, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 0, "skill": "member_A:pick_approach", "failure_class": "planning_collision", "action": "replan", "attempt": 1}
-[python3-7] {"ts": 1788007882.4462118, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "REPLAN_RETRY", "step_index": 0, "action": "replan"}
-[python3-7] {"ts": 1788007882.446274, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 0, "skill": "member_A:pick_approach"}
-[python3-7] [WARN] [1788007882.446665668] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
-[python3-7] [WARN] [1788007882.446688351] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
-[python3-7] [INFO] [1788007882.446889923] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
-[python3-7] [INFO] [1788007882.446924278] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
-[python3-7] [WARN] [1788007882.446930360] [moveit_3216203281.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
-[python3-7] [INFO] [1788007882.446942653] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
-[python3-7] [INFO] [1788007882.446956299] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
-[python3-7] [INFO] [1788007882.447156719] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'panda_arm' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
-[python3-7] [INFO] [1788007882.447202445] [astra_run_job]: Calling Planner 'OMPL'
-[python3-7] [ERROR] [1788007883.448473989] [moveit_3216203281.moveit.planners.ompl.planner_manager]: ./src/ompl/geometric/planners/rrt/src/RRTConnect.cpp:265 - panda_arm/panda_arm: Unable to sample any valid states for goal tree
-[python3-7] [WARN] [1788007883.448559852] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Invalid goal state
-[python3-7] [ERROR] [1788007883.466936260] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Unable to solve the planning problem
-[python3-7] [ERROR] [1788007883.467054895] [astra_run_job]: Planner 'OMPL' failed with error code GOAL_STATE_INVALID
-[python3-7] {"ts": 1788007883.4672344, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.42, -0.3, 0.245], "plan_success": false, "plan_time_ms": 1020.723, "failure_reason": "planning_failed"}
-[python3-7] {"ts": 1788007883.467447, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 0, "skill": "member_A:pick_approach", "success": false}
-[python3-7] {"ts": 1788007883.4675431, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 0, "skill": "member_A:pick_approach", "failure_class": "planning_collision", "action": "safe_pose", "attempt": 2}
-[python3-7] {"ts": 1788007883.4676254, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "REPLAN_RETRY", "step_index": 0, "action": "safe_pose"}
-[python3-7] {"ts": 1788007883.4676993, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 0, "skill": "member_A:pick_approach"}
-[python3-7] [WARN] [1788007883.468045091] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
-[python3-7] [WARN] [1788007883.468071141] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
-[python3-7] [INFO] [1788007883.468239950] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
-[python3-7] [INFO] [1788007883.468278814] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
-[python3-7] [WARN] [1788007883.468284324] [moveit_3216203281.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
-[python3-7] [INFO] [1788007883.468304823] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
-[python3-7] [INFO] [1788007883.468327326] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
-[python3-7] [INFO] [1788007883.468566239] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'panda_arm' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
-[python3-7] [INFO] [1788007883.468616464] [astra_run_job]: Calling Planner 'OMPL'
-[python3-7] [ERROR] [1788007884.475823614] [moveit_3216203281.moveit.planners.ompl.planner_manager]: ./src/ompl/geometric/planners/rrt/src/RRTConnect.cpp:265 - panda_arm/panda_arm: Unable to sample any valid states for goal tree
-[python3-7] [WARN] [1788007884.475935276] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Invalid goal state
-[python3-7] [ERROR] [1788007884.514431826] [moveit_3216203281.moveit.planners.ompl.model_based_planning_context]: Unable to solve the planning problem
-[python3-7] [ERROR] [1788007884.514518641] [astra_run_job]: Planner 'OMPL' failed with error code GOAL_STATE_INVALID
-[python3-7] {"ts": 1788007884.5146651, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.42, -0.3, 0.245], "plan_success": false, "plan_time_ms": 1046.767, "failure_reason": "planning_failed"}
-[python3-7] {"ts": 1788007884.514832, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 0, "skill": "member_A:pick_approach", "success": false}
-[python3-7] {"ts": 1788007884.5149126, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 0, "skill": "member_A:pick_approach", "failure_class": "planning_collision", "action": "operator_pause", "attempt": 3}
-[python3-7] {"ts": 1788007884.5149918, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 0, "final_status": "operator_paused"}
-[python3-7] job ASTRA_PRANAV_A: operator_paused (0/13 steps)
-[python3-7] [INFO] [1788007884.516711836] [moveit_3216203281.moveit.ros.moveit_cpp]: Deleting MoveItCpp
-[ERROR] [python3-7]: process has died [pid 68734, exit code -11, cmd 'python3 -m astra_ros.nodes.run_job --recipe recipes/ASTRA_Pranav_Variant_A.json --correction'].
+[robot_state_publisher-2] [WARN] [1788010046.150106361] [kdl_parser]: The root link panda_link0 has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[robot_state_publisher-2] [INFO] [1788010046.150216138] [robot_state_publisher]: Robot initialized
+[ros2_control_node-3] [INFO] [1788010046.154602283] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
+[ros2_control_node-3] [INFO] [1788010046.157323725] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[ros2_control_node-3] [INFO] [1788010046.159419793] [controller_manager]: update rate is 100 Hz
+[ros2_control_node-3] [INFO] [1788010046.159437848] [controller_manager]: Overruns handling is : enabled
+[ros2_control_node-3] [INFO] [1788010046.159443568] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-3] [WARN] [1788010046.159519202] [controller_manager]: Could not enable FIFO RT scheduling policy: with error number <1>(Operation not permitted). See [https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html] for details on how to enable realtime scheduling.
+[ros2_control_node-3] [INFO] [1788010046.333387513] [controller_manager]: Received robot description from topic.
+[ros2_control_node-3] [INFO] [1788010046.333447757] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[ros2_control_node-3] [INFO] [1788010046.336090862] [controller_manager]: Loading hardware 'PandaFakeSystem' 
+[ros2_control_node-3] [INFO] [1788010046.336544440] [controller_manager]: Loaded hardware 'PandaFakeSystem' from plugin 'mock_components/GenericSystem'
+[ros2_control_node-3] [INFO] [1788010046.336613561] [controller_manager]: Initialize hardware 'PandaFakeSystem' 
+[ros2_control_node-3] [INFO] [1788010046.342059422] [controller_manager]: Successful initialization of hardware 'PandaFakeSystem'
+[ros2_control_node-3] [INFO] [1788010046.342202713] [controller_manager]: Loading hardware 'PandaHandFakeSystem' 
+[ros2_control_node-3] [INFO] [1788010046.342222090] [controller_manager]: Loaded hardware 'PandaHandFakeSystem' from plugin 'mock_components/GenericSystem'
+[ros2_control_node-3] [INFO] [1788010046.342250073] [controller_manager]: Initialize hardware 'PandaHandFakeSystem' 
+[ros2_control_node-3] [INFO] [1788010046.347147425] [controller_manager]: Successful initialization of hardware 'PandaHandFakeSystem'
+[ros2_control_node-3] [INFO] [1788010046.347265679] [controller_manager]: Activating component 'PandaHandFakeSystem'.
+[ros2_control_node-3] [INFO] [1788010046.347278643] [resource_manager]: 'configure' hardware 'PandaHandFakeSystem' 
+[ros2_control_node-3] [INFO] [1788010046.347289093] [resource_manager]: Successful 'configure' of hardware 'PandaHandFakeSystem'
+[ros2_control_node-3] [INFO] [1788010046.347295124] [resource_manager]: 'activate' hardware 'PandaHandFakeSystem' 
+[ros2_control_node-3] [INFO] [1788010046.347302919] [resource_manager]: Successful 'activate' of hardware 'PandaHandFakeSystem'
+[ros2_control_node-3] [INFO] [1788010046.347375306] [controller_manager]: Activating component 'PandaFakeSystem'.
+[ros2_control_node-3] [INFO] [1788010046.347382299] [resource_manager]: 'configure' hardware 'PandaFakeSystem' 
+[ros2_control_node-3] [INFO] [1788010046.347390515] [resource_manager]: Successful 'configure' of hardware 'PandaFakeSystem'
+[ros2_control_node-3] [INFO] [1788010046.347395605] [resource_manager]: 'activate' hardware 'PandaFakeSystem' 
+[ros2_control_node-3] [INFO] [1788010046.347399121] [resource_manager]: Successful 'activate' of hardware 'PandaFakeSystem'
+[ros2_control_node-3] [INFO] [1788010046.347414080] [controller_manager]: Registering statistics for : PandaHandFakeSystem
+[ros2_control_node-3] [INFO] [1788010046.347468613] [controller_manager]: Registering statistics for : PandaFakeSystem
+[ros2_control_node-3] [INFO] [1788010046.347529568] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[spawner-5] [INFO] [1788010046.536246493] [spawner_panda_arm_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-3] [INFO] [1788010046.788336811] [controller_manager]: Loading controller : 'panda_arm_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[ros2_control_node-3] [INFO] [1788010046.788381746] [controller_manager]: Loading controller 'panda_arm_controller'
+[ros2_control_node-3] [INFO] [1788010046.792132477] [controller_manager]: Controller 'panda_arm_controller' node arguments: --ros-args --params-file /tmp/launch_params_uap05wz_ --params-file /opt/ros/jazzy/share/moveit_resources_panda_moveit_config/config/ros2_controllers.yaml 
+[spawner-5] [INFO] [1788010046.811501809] [spawner_panda_arm_controller]: Loaded panda_arm_controller
+[ros2_control_node-3] [INFO] [1788010046.812449383] [controller_manager]: Configuring controller: 'panda_arm_controller'
+[ros2_control_node-3] [INFO] [1788010046.812714264] [panda_arm_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-3] [INFO] [1788010046.812741936] [panda_arm_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-3] [INFO] [1788010046.812761504] [panda_arm_controller]: Using 'splines' interpolation method.
+[ros2_control_node-3] [INFO] [1788010046.818934341] [panda_arm_controller]: Action status changes will be monitored at 20.00 Hz.
+[ros2_control_node-3] [INFO] [1788010046.823269999] [panda_arm_controller]: Setting initial scaling factor to 1.000000
+[ros2_control_node-3] [INFO] [1788010046.823299986] [panda_arm_controller]: No scaling interface set. This controller will not read speed scaling from the hardware.
+[ros2_control_node-3] [INFO] [1788010046.831463742] [controller_manager]: Activating controllers: [ panda_arm_controller ]
+[ros2_control_node-3] [INFO] [1788010046.840163293] [controller_manager]: Successfully switched controllers!
+[spawner-5] [INFO] [1788010046.851652615] [spawner_panda_arm_controller]: Configured and activated panda_arm_controller
+[spawner-6] [INFO] [1788010046.998744672] [spawner_panda_hand_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-5]: process has finished cleanly [pid 102356]
+[INFO] [python3-7]: process started with pid [102461]
+[ros2_control_node-3] [INFO] [1788010047.251109870] [controller_manager]: Loading controller : 'panda_hand_controller' of type 'position_controllers/GripperActionController'
+[ros2_control_node-3] [INFO] [1788010047.251174112] [controller_manager]: Loading controller 'panda_hand_controller'
+[ros2_control_node-3] [INFO] [1788010047.252235712] [controller_manager]: Controller 'panda_hand_controller' node arguments: --ros-args --params-file /tmp/launch_params_uap05wz_ --params-file /opt/ros/jazzy/share/moveit_resources_panda_moveit_config/config/ros2_controllers.yaml 
+[ros2_control_node-3] [WARN] [1788010047.259199667] [panda_hand_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
+[spawner-6] [INFO] [1788010047.261877837] [spawner_panda_hand_controller]: Loaded panda_hand_controller
+[ros2_control_node-3] [INFO] [1788010047.262827195] [controller_manager]: Configuring controller: 'panda_hand_controller'
+[ros2_control_node-3] [INFO] [1788010047.262879153] [panda_hand_controller]: Action status changes will be monitored at 20.000000 Hz.
+[ros2_control_node-3] [INFO] [1788010047.271186962] [controller_manager]: Activating controllers: [ panda_hand_controller ]
+[ros2_control_node-3] [INFO] [1788010047.282620168] [controller_manager]: Successfully switched controllers!
+[spawner-6] [INFO] [1788010047.291189813] [spawner_panda_hand_controller]: Configured and activated panda_hand_controller
+[spawner-4] [INFO] [1788010047.395251802] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-6]: process has finished cleanly [pid 102357]
+[ros2_control_node-3] [INFO] [1788010047.647599507] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[ros2_control_node-3] [INFO] [1788010047.647634113] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2_control_node-3] [INFO] [1788010047.648927111] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /tmp/launch_params_uap05wz_ --params-file /opt/ros/jazzy/share/moveit_resources_panda_moveit_config/config/ros2_controllers.yaml 
+[python3-7] [INFO] [1788010047.653578667] [moveit_4186172638.moveit.py.cpp_initializer]: Initialize rclcpp
+[python3-7] [INFO] [1788010047.653623993] [moveit_4186172638.moveit.py.cpp_initializer]: Initialize node parameters
+[python3-7] [INFO] [1788010047.653633371] [moveit_4186172638.moveit.py.cpp_initializer]: Initialize node and executor
+[python3-7] [INFO] [1788010047.660131113] [moveit_4186172638.moveit.py.cpp_initializer]: Spin separate thread
+[spawner-4] [INFO] [1788010047.661198644] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[ros2_control_node-3] [INFO] [1788010047.661997126] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[ros2_control_node-3] [INFO] [1788010047.662076476] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[python3-7] [INFO] [1788010047.662602572] [moveit_4186172638.moveit.ros.rdf_loader]: Loaded robot model in 0.00231234 seconds
+[python3-7] [INFO] [1788010047.662644652] [moveit_4186172638.moveit.core.robot_model]: Loading robot model 'panda'...
+[python3-7] [WARN] [1788010047.668510477] [kdl_parser]: The root link panda_link0 has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.
+[python3-7] [INFO] [1788010047.668576933] [moveit_4186172638.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'panda_arm': 1 1 1 1 1 1 1
+[ros2_control_node-3] [INFO] [1788010047.671435786] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[ros2_control_node-3] [INFO] [1788010047.680024757] [controller_manager]: Successfully switched controllers!
+[python3-7] [INFO] [1788010047.691449277] [moveit_4186172638.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[spawner-4] [INFO] [1788010047.691505273] [spawner_joint_state_broadcaster]: Configured and activated joint_state_broadcaster
+[python3-7] [INFO] [1788010047.691615722] [moveit_4186172638.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
+[python3-7] [INFO] [1788010047.693182488] [moveit_4186172638.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[python3-7] [INFO] [1788010047.693853038] [moveit_4186172638.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[python3-7] [INFO] [1788010047.693873176] [moveit_4186172638.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
+[python3-7] [INFO] [1788010047.693981952] [moveit_4186172638.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[python3-7] [INFO] [1788010047.694363835] [moveit_4186172638.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[python3-7] [INFO] [1788010047.694471379] [moveit_4186172638.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[python3-7] [INFO] [1788010047.695057528] [moveit_4186172638.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
+[python3-7] [INFO] [1788010047.695071495] [moveit_4186172638.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[python3-7] [INFO] [1788010047.695418021] [moveit_4186172638.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
+[python3-7] [INFO] [1788010047.695960899] [moveit_4186172638.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[python3-7] [WARN] [1788010047.696225840] [moveit_4186172638.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[python3-7] [ERROR] [1788010047.696243333] [moveit_4186172638.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
+[INFO] [spawner-4]: process has finished cleanly [pid 102355]
+[python3-7] [INFO] [1788010048.378352187] [moveit_4186172638.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
+[python3-7] [INFO] [1788010048.379099232] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[python3-7] [INFO] [1788010048.379641057] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[python3-7] [INFO] [1788010048.379652399] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[python3-7] [INFO] [1788010048.379789348] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[python3-7] [INFO] [1788010048.379796832] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[python3-7] [INFO] [1788010048.379827470] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[python3-7] [INFO] [1788010048.379831468] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[python3-7] [INFO] [1788010048.379839573] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[python3-7] [INFO] [1788010048.380535922] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[python3-7] [INFO] [1788010048.381635463] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[python3-7] [INFO] [1788010048.381658477] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[python3-7] [INFO] [1788010048.382900408] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[python3-7] [INFO] [1788010048.382912602] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[python3-7] [INFO] [1788010048.383284055] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[python3-7] [INFO] [1788010048.402346766] [moveit_4186172638.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for panda_arm_controller
+[python3-7] [INFO] [1788010048.402395468] [moveit_4186172638.moveit.plugins.simple_controller_manager]: panda_hand_controller will command a max effort of: 0
+[python3-7] [INFO] [1788010048.404495985] [moveit_4186172638.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for panda_hand_controller
+[python3-7] [INFO] [1788010048.404708167] [moveit_4186172638.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-7] [INFO] [1788010048.404738784] [moveit_4186172638.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-7] [INFO] [1788010048.405300308] [moveit_4186172638.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[python3-7] {"ts": 1788010048.4059525, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "LOAD_JOB"}
+[python3-7] {"ts": 1788010048.4061549, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VALIDATE"}
+[python3-7] {"ts": 1788010048.4837828, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "BUILD_WORLD"}
+[python3-7] {"ts": 1788010048.4839811, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 0, "skill": "member_A:pick_approach"}
+[python3-7] [WARN] [1788010048.484572703] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-7] [WARN] [1788010048.484610364] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-7] [INFO] [1788010048.484796937] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-7] [INFO] [1788010048.484870416] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-7] [WARN] [1788010048.484877229] [moveit_4186172638.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-7] [INFO] [1788010048.484893430] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-7] [INFO] [1788010048.484913438] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-7] [INFO] [1788010048.485492334] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'panda_arm' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-7] [INFO] [1788010048.485598485] [astra_run_job]: Calling Planner 'OMPL'
+[python3-7] [INFO] [1788010048.500100611] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-7] [INFO] [1788010048.500657315] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-7] [INFO] [1788010048.500926755] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-7] [WARN] [1788010048.500971189] [moveit_4186172638.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-7] {"ts": 1788010048.5010483, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.42, -0.3, 0.245], "plan_success": true, "plan_time_ms": 16.831, "failure_reason": null}
+[python3-7] [INFO] [1788010048.501234919] [moveit_4186172638.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-7] [INFO] [1788010048.501254897] [moveit_4186172638.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-7] [INFO] [1788010048.501278070] [moveit_4186172638.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-7] [INFO] [1788010048.501287348] [moveit_4186172638.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-7] [INFO] [1788010048.501307156] [moveit_4186172638.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[python3-7] [INFO] [1788010048.510079584] [moveit_4186172638.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-7] [INFO] [1788010048.510131663] [moveit_4186172638.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-7] [INFO] [1788010048.510155738] [moveit_4186172638.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-7] [INFO] [1788010048.510238926] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to panda_arm_controller
+[ros2_control_node-3] [INFO] [1788010048.510694579] [panda_arm_controller]: Received new action goal
+[ros2_control_node-3] [INFO] [1788010048.510740566] [panda_arm_controller]: Accepted new action goal
+[python3-7] [INFO] [1788010048.510868358] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: panda_arm_controller started execution
+[python3-7] [INFO] [1788010048.510887855] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[ros2_control_node-3] [INFO] [1788010049.969903991] [panda_arm_controller]: Goal reached, success!
+[python3-7] [INFO] [1788010050.011353276] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'panda_arm_controller' successfully finished
+[python3-7] [INFO] [1788010050.040073782] [moveit_4186172638.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-7] {"ts": 1788010050.0402427, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Approach", "target_xyz": [0.42, -0.3, 0.245], "exec_result": "success"}
+[python3-7] {"ts": 1788010050.040503, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 0, "skill": "member_A:pick_approach", "success": true}
+[python3-7] {"ts": 1788010050.040606, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 0, "skill": "member_A:pick_approach", "result": "ok"}
+[python3-7] {"ts": 1788010050.0407162, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 0}
+[python3-7] {"ts": 1788010050.040793, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 1, "skill": "member_A:pick"}
+[python3-7] [WARN] [1788010050.041292129] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-7] [WARN] [1788010050.041336553] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-7] [INFO] [1788010050.041464495] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-7] [INFO] [1788010050.041512426] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-7] [WARN] [1788010050.041518618] [moveit_4186172638.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-7] [INFO] [1788010050.041533346] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-7] [INFO] [1788010050.041549566] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-7] [INFO] [1788010050.041874031] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'panda_arm' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-7] [INFO] [1788010050.041951968] [astra_run_job]: Calling Planner 'OMPL'
+[python3-7] [ERROR] [1788010051.048993049] [moveit_4186172638.moveit.planners.ompl.planner_manager]: ./src/ompl/geometric/planners/rrt/src/RRTConnect.cpp:265 - panda_arm/panda_arm: Unable to sample any valid states for goal tree
+[python3-7] [WARN] [1788010051.049107516] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Invalid goal state
+[python3-7] [ERROR] [1788010051.086474943] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Unable to solve the planning problem
+[python3-7] [ERROR] [1788010051.086575333] [astra_run_job]: Planner 'OMPL' failed with error code GOAL_STATE_INVALID
+[python3-7] {"ts": 1788010051.0869174, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Pick", "target_xyz": [0.42, -0.3, 0.125], "plan_success": false, "plan_time_ms": 1045.841, "failure_reason": "collision"}
+[python3-7] {"ts": 1788010051.0871463, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 1, "skill": "member_A:pick", "success": false}
+[python3-7] {"ts": 1788010051.0872912, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 1, "skill": "member_A:pick", "failure_class": "planning_collision", "action": "replan", "attempt": 0}
+[python3-7] {"ts": 1788010051.0874338, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "REPLAN_RETRY", "step_index": 1, "action": "replan"}
+[python3-7] {"ts": 1788010051.0875037, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 1, "skill": "member_A:pick"}
+[python3-7] [WARN] [1788010051.087865886] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-7] [WARN] [1788010051.087890132] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-7] [INFO] [1788010051.088060044] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-7] [INFO] [1788010051.088093457] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-7] [WARN] [1788010051.088099869] [moveit_4186172638.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-7] [INFO] [1788010051.088114016] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-7] [INFO] [1788010051.088140666] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-7] [INFO] [1788010051.088413403] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'panda_arm' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-7] [INFO] [1788010051.088465972] [astra_run_job]: Calling Planner 'OMPL'
+[python3-7] [ERROR] [1788010052.095104690] [moveit_4186172638.moveit.planners.ompl.planner_manager]: ./src/ompl/geometric/planners/rrt/src/RRTConnect.cpp:265 - panda_arm/panda_arm: Unable to sample any valid states for goal tree
+[python3-7] [WARN] [1788010052.095206343] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Invalid goal state
+[python3-7] [ERROR] [1788010052.136022940] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Unable to solve the planning problem
+[python3-7] [ERROR] [1788010052.136092121] [astra_run_job]: Planner 'OMPL' failed with error code GOAL_STATE_INVALID
+[python3-7] {"ts": 1788010052.136243, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Pick", "target_xyz": [0.42, -0.3, 0.125], "plan_success": false, "plan_time_ms": 1048.52, "failure_reason": "collision"}
+[python3-7] {"ts": 1788010052.1364214, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 1, "skill": "member_A:pick", "success": false}
+[python3-7] {"ts": 1788010052.1365125, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 1, "skill": "member_A:pick", "failure_class": "planning_collision", "action": "replan", "attempt": 1}
+[python3-7] {"ts": 1788010052.1365678, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "REPLAN_RETRY", "step_index": 1, "action": "replan"}
+[python3-7] {"ts": 1788010052.136619, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 1, "skill": "member_A:pick"}
+[python3-7] [WARN] [1788010052.136904820] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-7] [WARN] [1788010052.136922042] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-7] [INFO] [1788010052.137093868] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-7] [INFO] [1788010052.137127461] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-7] [WARN] [1788010052.137133843] [moveit_4186172638.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-7] [INFO] [1788010052.137146257] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-7] [INFO] [1788010052.137159271] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-7] [INFO] [1788010052.137384167] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'panda_arm' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-7] [INFO] [1788010052.137430655] [astra_run_job]: Calling Planner 'OMPL'
+[python3-7] [ERROR] [1788010053.145750936] [moveit_4186172638.moveit.planners.ompl.planner_manager]: ./src/ompl/geometric/planners/rrt/src/RRTConnect.cpp:265 - panda_arm/panda_arm: Unable to sample any valid states for goal tree
+[python3-7] [WARN] [1788010053.145849483] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Invalid goal state
+[python3-7] [ERROR] [1788010053.185836950] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Unable to solve the planning problem
+[python3-7] [ERROR] [1788010053.185939274] [astra_run_job]: Planner 'OMPL' failed with error code GOAL_STATE_INVALID
+[python3-7] {"ts": 1788010053.1861002, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Pick", "target_xyz": [0.42, -0.3, 0.125], "plan_success": false, "plan_time_ms": 1049.325, "failure_reason": "collision"}
+[python3-7] {"ts": 1788010053.1862943, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 1, "skill": "member_A:pick", "success": false}
+[python3-7] {"ts": 1788010053.1864023, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 1, "skill": "member_A:pick", "failure_class": "planning_collision", "action": "safe_pose", "attempt": 2}
+[python3-7] {"ts": 1788010053.1864753, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "REPLAN_RETRY", "step_index": 1, "action": "safe_pose"}
+[python3-7] {"ts": 1788010053.18654, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 1, "skill": "member_A:pick"}
+[python3-7] [WARN] [1788010053.186844588] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-7] [WARN] [1788010053.186865618] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-7] [INFO] [1788010053.187030320] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-7] [INFO] [1788010053.187061759] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-7] [WARN] [1788010053.187067660] [moveit_4186172638.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-7] [INFO] [1788010053.187081176] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-7] [INFO] [1788010053.187095112] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-7] [INFO] [1788010053.187339214] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'panda_arm' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-7] [INFO] [1788010053.187387616] [astra_run_job]: Calling Planner 'OMPL'
+[python3-7] [ERROR] [1788010054.194021183] [moveit_4186172638.moveit.planners.ompl.planner_manager]: ./src/ompl/geometric/planners/rrt/src/RRTConnect.cpp:265 - panda_arm/panda_arm: Unable to sample any valid states for goal tree
+[python3-7] [WARN] [1788010054.194106896] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Invalid goal state
+[python3-7] [ERROR] [1788010054.226070832] [moveit_4186172638.moveit.planners.ompl.model_based_planning_context]: Unable to solve the planning problem
+[python3-7] [ERROR] [1788010054.226155152] [astra_run_job]: Planner 'OMPL' failed with error code GOAL_STATE_INVALID
+[python3-7] {"ts": 1788010054.226306, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Pick", "target_xyz": [0.42, -0.3, 0.125], "plan_success": false, "plan_time_ms": 1039.603, "failure_reason": "collision"}
+[python3-7] {"ts": 1788010054.2265534, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 1, "skill": "member_A:pick", "success": false}
+[python3-7] {"ts": 1788010054.2266293, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 1, "skill": "member_A:pick", "failure_class": "planning_collision", "action": "operator_pause", "attempt": 3}
+[python3-7] {"ts": 1788010054.2267072, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 1, "final_status": "operator_paused"}
+[python3-7] job ASTRA_PRANAV_A: operator_paused (1/13 steps)
+[python3-7] [INFO] [1788010054.228493740] [moveit_4186172638.moveit.ros.moveit_cpp]: Deleting MoveItCpp
+[ERROR] [python3-7]: process has died [pid 102461, exit code -11, cmd 'python3 -m astra_ros.nodes.run_job --recipe recipes/ASTRA_Pranav_Variant_A.json --correction'].

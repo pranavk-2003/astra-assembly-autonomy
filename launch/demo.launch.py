@@ -14,7 +14,8 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, RegisterEventHandler
+from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch.conditions import IfCondition
 from launch_ros.actions import Node
@@ -126,6 +127,20 @@ def generate_launch_description():
         output="screen",
     )
 
+    # run_job must not start until panda_arm_controller (the one it actually
+    # commands) is spawned and activated - starting alongside it races the
+    # controller's action server coming up and the first trajectory execution
+    # aborts with "Action client not connected to action server" (confirmed
+    # live; see docs/moveit2_integration_notes.md). The spawner node exits
+    # once its controller is loaded+activated, so chaining on its exit is the
+    # deterministic ROS2 way to sequence this - not a fixed delay.
+    run_job_after_controllers = RegisterEventHandler(
+        OnProcessExit(
+            target_action=panda_arm_controller_spawner,
+            on_exit=[run_job_node],
+        )
+    )
+
     return LaunchDescription(
         [
             recipe_arg,
@@ -138,6 +153,6 @@ def generate_launch_description():
             panda_arm_controller_spawner,
             panda_hand_controller_spawner,
             rviz_node,
-            run_job_node,
+            run_job_after_controllers,
         ]
     )

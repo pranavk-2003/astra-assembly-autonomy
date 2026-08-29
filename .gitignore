@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+.venv/
+
+# ROS2 / colcon
+install/
+log/
+.colcon/
+
+# runtime artifacts
+logs/*.jsonl
+
+# editor
+.vscode/
+.idea/

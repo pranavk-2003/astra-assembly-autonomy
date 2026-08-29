@@ -1,0 +1,182 @@
+{
+  "job_id": "ASTRA_PRANAV_A",
+  "frame_id": "world",
+  "units": "m",
+  "parts": [
+    {
+      "id": "member_A",
+      "shape": {
+        "type": "box",
+        "size": [
+          0.34,
+          0.045,
+          0.035
+        ]
+      },
+      "source_pose": {
+        "xyz": [
+          0.1,
+          0.2
+        ],
+        "rpy": [
+          0.0,
+          0.0,
+          0.1
+        ]
+      },
+      "assembly_pose": {
+        "xyz": [
+          0.58,
+          -0.02,
+          0.11
+        ],
+        "rpy": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "grasp": {
+        "approach_vector": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "approach_distance": 0.12,
+        "grasp_offset_xyz": [
+          0.0,
+          0.0,
+          0.025
+        ]
+      }
+    },
+    {
+      "id": "member_B",
+      "shape": {
+        "type": "box",
+        "size": [
+          0.25,
+          0.045,
+          0.035
+        ]
+      },
+      "source_pose": {
+        "xyz": [
+          0.38,
+          0.32,
+          0.1
+        ],
+        "rpy": [
+          0.0,
+          0.0,
+          1.45
+        ]
+      },
+      "assembly_pose": {
+        "xyz": [
+          0.58,
+          0.13,
+          0.11
+        ],
+        "rpy": [
+          0.0,
+          0.0,
+          1.5708
+        ]
+      },
+      "grasp": {
+        "approach_vector": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "approach_distance": 0.1,
+        "grasp_offset_xyz": [
+          0.0,
+          0.0,
+          0.025
+        ]
+      }
+    }
+  ],
+  "joints": [
+    {
+      "id": "J1",
+      "type": "generic_connector",
+      "members": [
+        "member_A",
+        "member_B"
+      ],
+      "pose": {
+        "xyz": [
+          0.58,
+          0.075,
+          0.155
+        ],
+        "rpy": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "approach_vector": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "approach_distance": 0.1
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "fixture",
+      "shape": {
+        "type": "box",
+        "size": [
+          0.18,
+          0.22,
+          0.28
+        ]
+      },
+      "pose": {
+        "xyz": [
+          0.43,
+          0.0,
+          0.14
+        ],
+        "rpy": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "keepout",
+      "shape": {
+        "type": "box",
+        "size": [
+          0.12,
+          0.12,
+          0.35
+        ]
+      },
+      "pose": {
+        "xyz": [
+          0.62,
+          -0.23,
+          0.175
+        ],
+        "rpy": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "constraints": {
+    "max_perception_translation_correction_m": 0.03,
+    "max_perception_rotation_correction_deg": 8.0
+  }
+}

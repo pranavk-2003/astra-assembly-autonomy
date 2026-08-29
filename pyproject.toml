@@ -1,0 +1,28 @@
+[project]
+name = "astra-assembly-autonomy"
+version = "0.1.0"
+description = "Data-driven robotic assembly autonomy layer (ASTRA Robotics technical assessment)"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "scipy",
+    "jsonschema",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

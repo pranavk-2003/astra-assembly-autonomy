@@ -1,0 +1,19 @@
+{
+  "job_id": "ASTRA_PRANAV_B",
+  "observation_id": "OBS_001",
+  "part_id": "member_B",
+  "camera_frame": "camera_depth_optical_frame",
+  "target_frame": "world",
+  "confidence": 0.93,
+  "delta_translation_m": [
+    0.012,
+    -0.007,
+    0.004
+  ],
+  "delta_rpy_deg": [
+    0.0,
+    0.0,
+    3.5
+  ],
+  "timestamp": "SIMULATED"
+}

@@ -1,0 +1,17 @@
+{
+  "job_id": "ASTRA_PRANAV_B",
+  "failure_case": "PERCEPTION_OUT_OF_BOUNDS",
+  "part_id": "member_B",
+  "confidence": 0.88,
+  "delta_translation_m": [
+    0.055,
+    0.0,
+    0.0
+  ],
+  "delta_rpy_deg": [
+    0.0,
+    0.0,
+    12.0
+  ],
+  "expected_behavior": "Reject correction; do not execute target; enter deterministic recovery/re-observation/operator path."
+}

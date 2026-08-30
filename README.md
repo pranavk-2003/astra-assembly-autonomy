@@ -4,34 +4,47 @@ Data-driven robotic assembly autonomy layer for the ASTRA Robotics technical ass
 and Variant B run through identical orchestrator/skill/planner code; every part, joint and obstacle
 pose comes from the recipe JSON, never from source.
 
-**Status: M0-M3 complete.** The pure-Python core (recipe loading, pose math, world model, skill
-layer, FSM orchestrator, recovery policy, trace logging) runs both variants end to end with mock
-planner/execution/scene adapters - no ROS, no simulator required. `src/astra_ros/` now also has real
-MoveIt2 adapters (OMPL planner, PlanningScene, MoveItPy execution) wired through
-`launch/demo.launch.py`, verified live for both variants: the **unmodified** orchestrator/skill/
-recovery code plans, executes and verifies a real, physically-grasped pick on the real robot
-(`Approach` then `Pick`, `pick_verified: true`), then drives the exact designed recovery sequence
-(REPLAN -> REPLAN -> SAFE_POSE -> OPERATOR_PAUSE) on a genuine planning failure at the next step
-(`Retreat`, colliding the now-carried part with the recipe's own `keepout` obstacle) - see
-`docs/moveit2_integration_notes.md` for the full account and both live logs. That collision was
-checked against the recipe's own numbers directly (not assumed): `member_A`, held at its own recipe
-orientation, genuinely overlaps `keepout` by ~3 cm once lifted - this is the recipe's own exclusion
-zone doing its job, read as the assessment's intended failure/recovery demonstration (R9) rather than
-a defect.
+**Status: M0-M3 complete; both variants run the full job to completion under physics.**
+
+```
+job ASTRA_PRANAV_A: complete (13/13 steps)
+job ASTRA_PRANAV_B: complete (13/13 steps)
+```
+
+Every step - pick approach, pick (grasp verified), retreat, place approach, place, retreat, for both
+parts, then the joint approach - plans, executes and verifies against a live MoveIt2/OMPL planner
+driving a Gazebo simulation with real gravity and contact. The **same** orchestrator, skill and
+recovery code runs both variants; only the recipe JSON changes.
+
+The pure-Python core (recipe loading, pose math, world model, skill layer, FSM orchestrator, recovery
+policy, trace logging) also runs both variants headless with mock planner/execution/scene adapters -
+no ROS, no simulator required. `src/astra_ros/` holds the real MoveIt2 adapters (OMPL planner,
+PlanningScene, MoveItPy execution), the only place MoveIt2/ROS types appear.
+
+Reaching a completing run meant root-causing nine separate defects, each identified from the
+planner's own contact reports or from direct measurement rather than assumed - a stubbed gripper that
+never commanded the hand, a physics engine that silently dropped the finger mimic constraint, a
+grasp-stall abort, a gripper that was never opened, an obstacle model that made the supplied recipes
+unplannable by construction, standoff distances shorter than the gripper's own fingers, and an
+unbounded subprocess call that could hang the job silently. `docs/moveit2_integration_notes.md`
+carries the full account with live evidence for each.
 
 A Gazebo (`gz_sim`) physics variant (`launch/demo_gazebo.launch.py`, `config/panda_gazebo.urdf.xacro`)
 now runs the same sequence under real gravity and contact, verified live for both variants with RViz
 and the Gazebo GUI running together: the robot is anchored to the ground (fixing an initial "arm
 falls over" bug - the upstream URDF has no real joint anchoring the base, only a MoveIt-only SRDF
-virtual joint with no effect on physics), `Approach` and `Pick` both plan, execute under real physics
-and verify successfully, and `Retreat` correctly hits the same genuine `keepout` collision as the
-mock-hardware run. `member_A`/`member_B` and both obstacles are also spawned as real, physical Gazebo
-models (`gz model --list` confirms), not just MoveIt/RViz planning-scene geometry. `Pick`/`Place` now
-also drive the real `panda_hand_controller` (a `GripperCommand` action, already wired by upstream
+virtual joint with no effect on physics). Both parts and both obstacles are spawned as real, physical
+Gazebo models (`gz model --list` confirms), not just MoveIt/RViz planning-scene geometry.
+`Pick`/`Place` drive the real `panda_hand_controller` (a `GripperCommand` action, wired by upstream
 `gripper_moveit_controllers.yaml`) through the SRDF's own `hand` group `open`/`close` states, so the
-gripper's fingers genuinely open and close in Gazebo - but the grasp is still MoveIt-scene-only: the
-carried part doesn't yet kinematically follow the gripper once it's lifted, since that needs
-`gz_sim`'s `DetachableJoint` system (not yet wired). Getting here needed
+gripper's fingers genuinely open and close in Gazebo - measured peak opening 0.0343 rad against a
+0.035 rad target, closing onto a 45 mm part.
+
+**Known limitation:** the grasp is real in MoveIt's planning scene but not yet in the physics. Under
+`gz_ros2_control`'s position command interface joints are driven kinematically and ignore contact
+force, so the fingers close *through* the part rather than gripping it, and the part does not
+physically follow the gripper. A truly physical grip needs `gz_sim`'s `DetachableJoint` system (or an
+effort interface with gravity compensation); neither is wired yet. Getting here needed
 working around an upstream MoveIt2 bug closed as not planned
 ([moveit2#2940](https://github.com/moveit/moveit2/issues/2940)) plus a second, undocumented MoveIt
 quirk, three rounds of startup-race fixes, and a couple of real-physics-specific tuning fixes - all

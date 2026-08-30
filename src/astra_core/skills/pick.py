@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from astra_core.geometry.approach import derive_grasp_pose
 from astra_core.geometry.pose import Pose
-from astra_core.skills.base import SkillContext, SkillOutcome, plan_and_execute
+from astra_core.skills.base import SkillContext, SkillOutcome, obstacle_ids, plan_and_execute
 
 
 def pick(ctx: SkillContext, part_id: str, part_pose: Pose, grasp_offset_xyz) -> SkillOutcome:
@@ -13,12 +13,24 @@ def pick(ctx: SkillContext, part_id: str, part_pose: Pose, grasp_offset_xyz) -> 
     # The final grasp descent necessarily puts the gripper around/overlapping
     # the part - a planner otherwise reports the goal as in collision with the
     # very object being grasped (R3/R5; see docs/moveit2_integration_notes.md).
-    ctx.scene.allow_collision(part_id)
+    # Open before descending: the fingers must be wider than the part before
+    # they close around it, and nothing else in the sequence opens them - so
+    # without this the grasp starts from wherever the previous step left the
+    # gripper (measured on real physics: part-way closed at spawn, never
+    # reopened). No-op on backends without an actuated gripper.
+    ctx.execution.open_gripper()
+    ctx.scene.allow_collision(part_id, obstacle_ids(ctx))
     outcome = plan_and_execute(ctx, "Pick", grasp_pose)
     if not outcome.success:
         return outcome
 
     ctx.scene.attach(part_id)
+    # Re-assert the exemption AFTER attaching: attaching rebuilds the part as
+    # a body carried by the gripper rather than a world object, which drops
+    # the entries set above - so the carried part would start colliding with
+    # the very obstacles the recipe deliberately routes it through, exactly
+    # when it begins moving. The arm's own checks against them are untouched.
+    ctx.scene.allow_collision(part_id, obstacle_ids(ctx))
     ctx.execution.attach(part_id)
     ctx.world.attach(part_id)
 

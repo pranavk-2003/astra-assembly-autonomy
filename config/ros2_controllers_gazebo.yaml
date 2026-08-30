@@ -45,7 +45,14 @@ panda_arm_controller:
 panda_hand_controller:
   ros__parameters:
     joint: panda_finger_joint1
+    # A real grasp necessarily stalls the fingers: they close onto a solid
+    # object and stop short of the commanded position. GripperActionController
+    # defaults allow_stalling to false, which turns exactly that into
+    # "Stall detected moving to goal. Aborting action!" - confirmed live as
+    # the ABORTED status on the gripper-close goal. Under mock hardware the
+    # fingers meet no resistance and reach the setpoint, so this never fired.
+    allow_stalling: true
 
 gz_ros_control:
   ros__parameters:
-    position_proportional_gain: 0.5
+    position_proportional_gain: 1.0

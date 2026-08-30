@@ -61,6 +61,17 @@ def build_moveit_py(
         # from current robot state" - a real dynamics effect mock hardware
         # never exhibits, not a bug. Widened for that launch only.
         config_dict["trajectory_execution"]["allowed_start_tolerance"] = allowed_start_tolerance
+        # Same real-physics-vs-planned-timing gap as above, but for
+        # in-flight duration rather than start position: gz_ros_control's
+        # position interface (see docs/moveit2_integration_notes.md) tracks
+        # a commanded position slower than the ideal joint_limits.yaml
+        # velocity assumed by AddTimeOptimalParameterization, so the
+        # gripper-close trajectory's own actual completion legitimately
+        # runs past the planned duration - confirmed live via "Controller is
+        # taking too long to execute trajectory" on the stock 1.2/0.5
+        # values. Widened for this launch only.
+        config_dict["trajectory_execution"]["allowed_execution_duration_scaling"] = 3.0
+        config_dict["trajectory_execution"]["allowed_goal_duration_margin"] = 2.0
     return MoveItPy(node_name=node_name, config_dict=config_dict)
 
 

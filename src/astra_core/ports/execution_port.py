@@ -27,6 +27,16 @@ class ExecutionPort(abc.ABC):
     @abc.abstractmethod
     def execute(self, trajectory: object) -> ExecutionResult: ...
 
+    def open_gripper(self) -> None:
+        """Drive the gripper to its fully-open configuration.
+
+        Concrete (not abstract) with a no-op default: an execution backend
+        with no actuated gripper - or a mock one, where nothing physically
+        blocks a grasp - is correct to do nothing here. Skills call it before
+        a grasp descent so the fingers are known-open rather than wherever
+        the previous step happened to leave them.
+        """
+
     @abc.abstractmethod
     def attach(self, object_id: str) -> None: ...
 

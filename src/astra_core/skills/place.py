@@ -15,7 +15,12 @@ def place(ctx: SkillContext, part_id: str, place_pose: Pose) -> SkillOutcome:
     ctx.scene.detach(part_id, place_pose)
     ctx.execution.detach(part_id)
     ctx.world.detach(part_id, place_pose)
-    # Part is a world object again at its new pose - restore normal collision
-    # checking against it (undoes pick()'s allow_collision).
-    ctx.scene.disallow_collision(part_id)
+    # Collision checking against the part is deliberately NOT restored here.
+    # The gripper is still closed around it at the instant of release, so
+    # re-enabling the check would make the very next motion - withdrawing
+    # from the part - unplannable from a start state that is in collision by
+    # definition (observed live: contacts against the hand and wrist). The
+    # orchestrator restores it once the retreat has actually withdrawn.
+    # Part-vs-obstacle stays exempt permanently: the part now RESTS in the
+    # work-holding structure it was assembled onto and overlaps it for good.
     return outcome

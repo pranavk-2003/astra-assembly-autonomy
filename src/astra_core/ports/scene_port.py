@@ -4,6 +4,7 @@ to assert R3's attach/detach correctness in tests without a simulator)."""
 from __future__ import annotations
 
 import abc
+from collections.abc import Sequence
 
 from astra_core.geometry.pose import Pose
 from astra_core.recipe.models import Shape
@@ -23,13 +24,34 @@ class ScenePort(abc.ABC):
     def detach(self, object_id: str, pose: Pose) -> None: ...
 
     @abc.abstractmethod
-    def allow_collision(self, object_id: str) -> None:
+    def allow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
         """Temporarily permit the gripper to approach/overlap object_id, for
         the final grasp descent immediately before attach() (a real planner
         otherwise reports the goal pose as in collision - see
-        docs/moveit2_integration_notes.md)."""
+        docs/moveit2_integration_notes.md).
+
+        `with_ids` additionally exempts object_id against those world objects.
+        A carried workpiece legitimately occupies space the recipe assigns it:
+        a part can rest inside an exclusion zone at its source pose and is
+        assembled onto its jig at its assembly pose. Collision-checking a
+        held part against those makes every plan fail from the start state
+        (measured on the supplied recipes), so the recipe's own obstacle ids
+        are passed here while the ARM itself keeps checking against them."""
+
+    def allow_arm_collision(self, object_id: str) -> None:
+        """Permit the WHOLE ARM, not just the gripper, to occupy object_id.
+
+        Reserved for work-holding structure (see
+        WorldModel.work_holding_obstacles): reaching a pose inside a jig puts
+        the forearm through it, verified with MoveIt's collision checker
+        ('panda_link5' against such an obstacle at a place pose). Kept a
+        separate verb from allow_collision so the far weaker guarantee it
+        gives is explicit at every call site. No-op by default."""
+
+    def disallow_arm_collision(self, object_id: str) -> None:
+        """Restore full arm collision checking against object_id."""
 
     @abc.abstractmethod
-    def disallow_collision(self, object_id: str) -> None:
+    def disallow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
         """Revert allow_collision once the part is safely placed back in the
         world (post-detach), restoring normal collision checking against it."""

@@ -26,6 +26,17 @@ class SkillContext:
     world: WorldModel | None = None
 
 
+def obstacle_ids(ctx: "SkillContext") -> tuple[str, ...]:
+    """The recipe's obstacle ids, for exempting a CARRIED part from colliding
+    with world geometry the recipe deliberately puts it inside (a source pose
+    within an exclusion zone, an assembly pose resting on a jig). Read from the
+    world model, never written literally - a skill holds no product geometry.
+    """
+    if ctx.world is None:
+        return ()
+    return tuple(ctx.world.obstacles)
+
+
 @dataclass(frozen=True)
 class SkillOutcome:
     success: bool

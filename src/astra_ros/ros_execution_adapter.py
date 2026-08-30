@@ -40,6 +40,9 @@ class ROSExecutionAdapter(ExecutionPort):
             return False
         return bool(self._moveit_py.execute(plan_result.trajectory, controllers=self._controller_names))
 
+    def open_gripper(self) -> None:
+        self._move_gripper("open")
+
     def attach(self, object_id: str) -> None:
         if self._move_gripper("close"):
             self._attached_ids.add(object_id)

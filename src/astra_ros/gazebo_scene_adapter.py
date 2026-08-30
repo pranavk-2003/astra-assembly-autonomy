@@ -12,7 +12,10 @@ repo's existing pattern of using ROS2 CLI tools from Python where a stable
 Python API isn't available. Confined to astra_ros/."""
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 import subprocess
+import sys
 
 from astra_core.geometry.pose import Pose
 from astra_core.ports.scene_port import ScenePort
@@ -53,10 +56,31 @@ class GazeboSceneAdapter(ScenePort):
     def __init__(self) -> None:
         self._spawned: set[str] = set()
 
+    # These shell out to ROS CLI tools that talk to Gazebo over its own
+    # transport. A call that never returns would hang the whole job silently
+    # with no log line (observed live: the run stopped dead after a successful
+    # place, mid-detach, and sat there until the launch was killed). This
+    # visualisation mirror must never be able to block the autonomy layer, so
+    # every call is bounded and a miss is reported rather than awaited.
+    _CLI_TIMEOUT_S = 10.0
+
+    def _run(self, argv: list[str], what: str) -> None:
+        try:
+            result = subprocess.run(
+                argv, check=False, capture_output=True, timeout=self._CLI_TIMEOUT_S
+            )
+        except subprocess.TimeoutExpired:
+            print(f"[gazebo_scene] {what} timed out after {self._CLI_TIMEOUT_S}s; "
+                  "Gazebo view may be stale", file=sys.stderr)
+            return
+        if result.returncode != 0:
+            print(f"[gazebo_scene] {what} failed (rc={result.returncode}); "
+                  "Gazebo view may be stale", file=sys.stderr)
+
     def _spawn_or_move(self, object_id: str, shape: Shape, pose: Pose) -> None:
         rpy = pose.to_rpy()
         if object_id not in self._spawned:
-            subprocess.run(
+            self._run(
                 [
                     "ros2", "run", "ros_gz_sim", "create",
                     "-string", _box_sdf(object_id, shape),
@@ -64,20 +88,18 @@ class GazeboSceneAdapter(ScenePort):
                     "-x", str(pose.xyz[0]), "-y", str(pose.xyz[1]), "-z", str(pose.xyz[2]),
                     "-R", str(rpy[0]), "-P", str(rpy[1]), "-Y", str(rpy[2]),
                 ],
-                check=False,
-                capture_output=True,
+                f"spawn {object_id}",
             )
             self._spawned.add(object_id)
         else:
-            subprocess.run(
+            self._run(
                 [
                     "ros2", "run", "ros_gz_sim", "set_entity_pose",
                     "--name", object_id,
                     "--pos", str(pose.xyz[0]), str(pose.xyz[1]), str(pose.xyz[2]),
                     "--euler", str(rpy[0]), str(rpy[1]), str(rpy[2]),
                 ],
-                check=False,
-                capture_output=True,
+                f"move {object_id}",
             )
 
     def add_object(self, object_id: str, shape: Shape, pose: Pose) -> None:
@@ -92,10 +114,10 @@ class GazeboSceneAdapter(ScenePort):
     def detach(self, object_id: str, pose: Pose) -> None:
         self.update_pose(object_id, pose)
 
-    def allow_collision(self, object_id: str) -> None:
+    def allow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
         pass  # MoveIt-side concept only; Gazebo has its own real contact physics
 
-    def disallow_collision(self, object_id: str) -> None:
+    def disallow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
         pass
 
 
@@ -124,10 +146,18 @@ class CompositeSceneAdapter(ScenePort):
         for a in self._adapters:
             a.detach(object_id, pose)
 
-    def allow_collision(self, object_id: str) -> None:
+    def allow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
         for a in self._adapters:
-            a.allow_collision(object_id)
+            a.allow_collision(object_id, with_ids)
 
-    def disallow_collision(self, object_id: str) -> None:
+    def disallow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
         for a in self._adapters:
-            a.disallow_collision(object_id)
+            a.disallow_collision(object_id, with_ids)
+
+    def allow_arm_collision(self, object_id: str) -> None:
+        for a in self._adapters:
+            a.allow_arm_collision(object_id)
+
+    def disallow_arm_collision(self, object_id: str) -> None:
+        for a in self._adapters:
+            a.disallow_arm_collision(object_id)

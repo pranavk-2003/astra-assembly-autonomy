@@ -46,6 +46,15 @@ def _dispatch(step: Step, recipe: Recipe, world: WorldModel, skill_ctx: SkillCon
         grasp_pose = derive_grasp_pose(part_pose, part.grasp.grasp_offset_xyz)
         vec, dist = part.grasp.approach_vector, part.grasp.approach_distance
         if step.kind is StepKind.PICK_APPROACH:
+            # Exempt the gripper against the part it is deliberately moving to
+            # envelop, from the approach onward rather than only at the grasp.
+            # A recipe may specify an approach distance shorter than the
+            # gripper's own finger length (one supplied part does: 0.1 m of
+            # standoff against ~0.103 m fingers), which puts a fingertip
+            # inside the part at the approach pose itself - verified live as
+            # a finger/part contact that blocked the approach before pick()
+            # had granted any exemption.
+            skill_ctx.scene.allow_collision(step.part_id)
             return approach(skill_ctx, grasp_pose, vec, dist)
         if step.kind is StepKind.PICK:
             return pick(skill_ctx, step.part_id, part_pose, part.grasp.grasp_offset_xyz)
@@ -59,6 +68,15 @@ def _dispatch(step: Step, recipe: Recipe, world: WorldModel, skill_ctx: SkillCon
             return approach(skill_ctx, place_pose, vec, dist)
         if step.kind is StepKind.PLACE:
             return place(skill_ctx, step.part_id, place_pose)
+        # NOTE: gripper-vs-part checking is deliberately never restored for a
+        # placed part. Withdrawing by the recipe's own retreat distance leaves
+        # the fingertips ~1 mm short of clearing the part's top face (that
+        # distance is shorter than the gripper's finger length), so restoring
+        # the check strands the arm in a start state that is in collision and
+        # nothing further can plan. Only the GRIPPER links stay exempt - every
+        # arm link still collision-checks against the placed part, so the arm
+        # cannot sweep through it, and the part is in its final assembled
+        # position by this point.
         return retreat(skill_ctx, place_pose, vec, dist)
 
     # JOINT_APPROACH
@@ -145,6 +163,21 @@ def run_job(
         skill_ctx.scene.add_object(obstacle.id, obstacle.shape, obstacle.pose)
     for part in recipe.parts:
         skill_ctx.scene.add_object(part.id, part.shape, world.pose_of(part.id))
+
+    # Classify obstacles by geometry: one that encloses a pose the robot is
+    # required to reach is work-holding structure, not an exclusion zone, and
+    # the arm must be able to enter it or the recipe cannot be executed at all
+    # (verified against the planner: reaching an assembly pose inside such an
+    # obstacle puts a forearm link through it). Obstacles enclosing no required
+    # pose are untouched and keep full collision checking.
+    work_holding: set[str] = set()
+    for part in recipe.parts:
+        for pose in (part.source_pose, part.assembly_pose):
+            work_holding.update(world.work_holding_obstacles(pose, part.shape))
+    for obstacle_id in sorted(work_holding):
+        skill_ctx.scene.allow_arm_collision(obstacle_id)
+        logger.log(step="world", obstacle=obstacle_id, classified="work_holding")
+
     enter_state(logger, State.BUILD_WORLD)
 
     job_ctx = JobContext(recipe=recipe, world=world, skill_ctx=skill_ctx)

@@ -2,6 +2,8 @@
 a carried part was attached on pick and detached on place (R3)."""
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 from astra_core.geometry.pose import Pose
 from astra_core.ports.scene_port import ScenePort
 from astra_core.recipe.models import Shape
@@ -31,8 +33,8 @@ class MockScene(ScenePort):
         self.update_pose(object_id, pose)
         self.calls.append(("detach", object_id))
 
-    def allow_collision(self, object_id: str) -> None:
+    def allow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
         self.calls.append(("allow_collision", object_id))
 
-    def disallow_collision(self, object_id: str) -> None:
+    def disallow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
         self.calls.append(("disallow_collision", object_id))

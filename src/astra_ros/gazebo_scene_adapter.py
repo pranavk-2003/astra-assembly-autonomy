@@ -11,6 +11,7 @@ from collections.abc import Sequence
 
 import subprocess
 import sys
+import time
 
 from astra_core.geometry.pose import Pose
 from astra_core.ports.scene_port import ScenePort
@@ -105,6 +106,10 @@ class GazeboSceneAdapter(ScenePort):
     # bounded and a miss is reported rather than awaited.
     _CLI_TIMEOUT_S = 10.0
 
+    # How long the freshly spawned bodies get to come to rest before the job
+    # reads a pose back or commands a move.
+    _SETTLE_S = 1.5
+
     def _run(self, argv: list[str], what: str) -> None:
         try:
             result = subprocess.run(
@@ -119,20 +124,44 @@ class GazeboSceneAdapter(ScenePort):
                   "Gazebo view may be stale", file=sys.stderr)
 
     def _spawn_async(self, argv: list[str]) -> None:
-        """Fire a spawn without waiting - every object in a recipe is
-        independent at spawn time, so no need to serialise the CLI overhead
-        per object."""
+        """Fire a spawn without waiting - parts and obstacles are independent
+        of each other, so they all go out at once rather than one at a time.
+        Drained by _settle() before anything reads the scene back."""
         self._pending_spawns.append(subprocess.Popen(argv))
 
+    def _settle(self) -> None:
+        """Wait for every in-flight spawn to land, then for the bodies to come
+        to rest. Parts are dynamic: they are created at their recipe pose and
+        drop the last fraction of a millimetre onto the table, so reading a
+        pose back (or commanding a move) before this is reading a body that is
+        still falling."""
+        if not self._pending_spawns:
+            return
+        for process in self._pending_spawns:
+            try:
+                process.wait(timeout=self._CLI_TIMEOUT_S)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                print("[gazebo_scene] a spawn did not complete in "
+                      f"{self._CLI_TIMEOUT_S}s; Gazebo view may be incomplete",
+                      file=sys.stderr)
+        self._pending_spawns.clear()
+        time.sleep(self._SETTLE_S)
+
     def _ensure_worktable(self) -> None:
+        """Spawned synchronously and before any part. The parts' underside sits
+        exactly at the table top, so a part created while the table does not
+        yet exist free-falls instead of resting at its recipe pose - which then
+        moves the grasp target out from under the gripper."""
         if self._worktable_spawned:
             return
         self._worktable_spawned = True
         z = WORKTABLE_TOP_Z - WORKTABLE_SIZE[2] / 2.0
-        self._spawn_async(
+        self._run(
             ["ros2", "run", "ros_gz_sim", "create",
              "-string", _worktable_sdf(), "-name", "worktable",
              "-x", "0", "-y", "0", "-z", str(z)],
+            "spawn worktable",
         )
 
     def _spawn_or_move(self, object_id: str, shape: Shape, pose: Pose,
@@ -157,6 +186,7 @@ class GazeboSceneAdapter(ScenePort):
         """Move an already-spawned model via gz-transport's own set_pose.
         Not `ros2 run ros_gz_sim set_entity_pose`: that wrapper never returns
         for the static models used here."""
+        self._settle()  # cannot move a model whose spawn is still in flight
         qx, qy, qz, qw = (float(v) for v in pose.quat_xyzw)
         x, y, z = (float(v) for v in pose.xyz)
         request = (
@@ -180,6 +210,7 @@ class GazeboSceneAdapter(ScenePort):
         Stands in for a perception sensor: parts are dynamic bodies, so where
         one really is and where the recipe says it is can differ once it has
         settled or been nudged."""
+        self._settle()  # never read a body that is still spawning or falling
         try:
             result = subprocess.run(
                 ["gz", "model", "-m", object_id, "-p"],

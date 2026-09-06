@@ -36,6 +36,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="cuRobo planning service")
     parser.add_argument("--robot", default="ur10e.yml",
                         help="cuRobo robot config (shipped name or path to a yml)")
+    parser.add_argument("--ik-seeds", type=int, default=64,
+                        help="IK seeds per solve; more trades plan time for a "
+                             "far lower chance of a spurious 'no solution'")
+    parser.add_argument("--trajopt-seeds", type=int, default=8,
+                        help="trajectory-optimiser seeds per solve")
+    parser.add_argument("--max-attempts", type=int, default=10,
+                        help="solver retries within one plan request")
+    parser.add_argument("--graph-attempts", type=int, default=2,
+                        help="attempts after which the graph planner is used "
+                             "to escape a local minimum")
     args = parser.parse_args()
 
     # Imported here so an import failure is reported over the protocol rather
@@ -55,10 +65,20 @@ def main() -> int:
         # "'NoneType' object has no attribute 'load_collision_model'".
         # collision_cache pre-allocates slots for the obstacles the recipe will
         # push in later - the count is a ceiling, not a fixed set.
+        # Seed counts are the cuRobo equivalent of MoveIt's planning_attempts /
+        # planning_time budget (config/moveit_cpp.yaml). Both solvers here are
+        # randomised: cuRobo draws IK seeds and trajectory-optimiser seeds, and
+        # a single draw that lands in a local minimum reports "no solution" for
+        # a goal that is perfectly reachable. Measured on the Variant B place
+        # and retreat goals, the shipped defaults solved as little as 1 attempt
+        # in 8 for a pose the arm can plainly reach, which the recovery policy
+        # then saw as ik_unreachable three times over and aborted the job.
         cfg = MotionPlannerCfg.create(
             robot=args.robot,
             scene_model="collision_table.yml",
             collision_cache={"obb": 32, "mesh": 8},
+            num_ik_seeds=args.ik_seeds,
+            num_trajopt_seeds=args.trajopt_seeds,
         )
         planner = MotionPlanner(cfg)
     except Exception as exc:
@@ -117,7 +137,11 @@ def main() -> int:
             )
 
             t0 = time.time()
-            result = planner.plan_pose(goal_pose, start)
+            result = planner.plan_pose(
+                goal_pose, start,
+                max_attempts=args.max_attempts,
+                enable_graph_attempt=args.graph_attempts,
+            )
             plan_ms = (time.time() - t0) * 1000.0
 
             if result is None or not bool(getattr(result, "success", False)):

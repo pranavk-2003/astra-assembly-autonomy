@@ -8,7 +8,6 @@ bootstrap one itself (see docs/moveit2_integration_notes.md)."""
 from __future__ import annotations
 
 import argparse
-import os
 import sys
 from pathlib import Path
 
@@ -21,45 +20,21 @@ from astra_core.recipe.loader import load_correction, load_recipe
 from astra_core.skills.base import SkillContext
 from astra_core.trace.logger import TraceLogger
 from astra_ros.gazebo_scene_adapter import CompositeSceneAdapter, GazeboSceneAdapter
-from astra_ros.curobo_planner_adapter import CuRoboPlannerAdapter
 from astra_ros.moveit_planner_adapter import MoveItPlannerAdapter
 from astra_ros.moveit_scene_adapter import MoveItSceneAdapter
-from astra_ros.robot_profile import PANDA, RobotProfile, profile
 from astra_ros.ros_execution_adapter import ROSExecutionAdapter
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
-def _moveit_configs(robot: RobotProfile, moveit_cpp_path: str):
-    """MoveIt configuration for the selected arm.
-
-    The Panda path uses the upstream moveit_resources package as-is. The UR
-    path takes kinematics/joint limits from ur_moveit_config but supplies this
-    repo's own URDF and SRDF, because ur_description ships a bare arm: no
-    gripper, hence no hand group and no open/close states for a grasp.
-    """
-    if robot.name == "ur":
-        return (
-            MoveItConfigsBuilder("ur", package_name="ur_moveit_config")
-            .robot_description(
-                file_path=str(REPO_ROOT / "config" / "ur_gazebo.urdf.xacro"),
-                mappings={
-                    "controllers_config_path": str(
-                        REPO_ROOT / "config" / "ros2_controllers_ur.yaml"
-                    ),
-                },
-            )
-            .robot_description_semantic(file_path=str(REPO_ROOT / "config" / "ur.srdf"))
-            .joint_limits(file_path=str(REPO_ROOT / "config" / "ur_joint_limits.yaml"))
-            .trajectory_execution(
-                file_path=str(REPO_ROOT / "config" / "ur_moveit_controllers.yaml")
-            )
-            .planning_pipelines(pipelines=["ompl", "pilz_industrial_motion_planner"])
-            .moveit_cpp(file_path=moveit_cpp_path)
-            .to_moveit_configs()
-        )
-    return (
+def build_moveit_py(
+    node_name: str = "astra_run_job",
+    moveit_cpp_config: str | None = None,
+    allowed_start_tolerance: float | None = None,
+) -> MoveItPy:
+    moveit_cpp_path = moveit_cpp_config or str(REPO_ROOT / "config" / "moveit_cpp.yaml")
+    moveit_config = (
         MoveItConfigsBuilder("moveit_resources_panda")
         .robot_description(file_path="config/panda.urdf.xacro")
         .robot_description_semantic(file_path="config/panda.srdf")
@@ -68,16 +43,6 @@ def _moveit_configs(robot: RobotProfile, moveit_cpp_path: str):
         .moveit_cpp(file_path=moveit_cpp_path)
         .to_moveit_configs()
     )
-
-
-def build_moveit_py(
-    node_name: str = "astra_run_job",
-    moveit_cpp_config: str | None = None,
-    allowed_start_tolerance: float | None = None,
-    robot: RobotProfile = PANDA,
-) -> MoveItPy:
-    moveit_cpp_path = moveit_cpp_config or str(REPO_ROOT / "config" / "moveit_cpp.yaml")
-    moveit_config = _moveit_configs(robot, moveit_cpp_path)
     # NOTE: use_sim_time is deliberately NOT set here. MoveItPy throws
     # rclcpp::exceptions::InvalidParameterValueException on
     # "qos_overrides./clock.subscription.durability" when use_sim_time is
@@ -110,21 +75,6 @@ def build_moveit_py(
     return MoveItPy(node_name=node_name, config_dict=config_dict)
 
 
-def _exit(status: int) -> None:
-    """Exit without running MoveItCpp's destructor.
-
-    MoveItPy segfaults inside its own teardown ("Deleting MoveItCpp") AFTER
-    the job has finished and its result has been printed. The launch then
-    reports `process has died ... exit code -11`, which reads as a failed run
-    even when every step succeeded. All work and logging are complete by this
-    point, so the process leaves with the real status rather than reporting a
-    crash it already survived.
-    """
-    sys.stdout.flush()
-    sys.stderr.flush()
-    os._exit(status)
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="ASTRA MoveIt2 job runner")
     parser.add_argument("--recipe", required=True, type=Path)
@@ -135,18 +85,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--confidence-threshold", type=float, default=0.90)
     parser.add_argument("--moveit-cpp-config", type=str, default="")
     parser.add_argument("--allowed-start-tolerance", type=float, default=None)
-    parser.add_argument(
-        "--robot", type=str, default="panda",
-        help="robot profile selecting arm/gripper naming (see astra_ros.robot_profile). "
-             "Nothing in astra_core changes with it.",
-    )
-    parser.add_argument(
-        "--planner", type=str, default="moveit", choices=["moveit", "curobo"],
-        help="planner backend. cuRobo runs out-of-process (its venv is py3.11, "
-             "ROS Jazzy is py3.12, rclpy can't load in cuRobo's venv) - see "
-             "astra_ros.curobo_bridge. MoveIt still owns the planning scene and "
-             "execution either way; cuRobo only computes trajectories.",
-    )
     parser.add_argument(
         "--spawn-in-gazebo",
         action="store_true",
@@ -160,33 +98,18 @@ def main(argv: list[str] | None = None) -> int:
     correction = load_correction(Path(args.correction)) if args.correction else None
 
     rclpy.init()
-    robot = profile(args.robot)
     moveit_py = build_moveit_py(
         moveit_cpp_config=args.moveit_cpp_config or None,
         allowed_start_tolerance=args.allowed_start_tolerance,
-        robot=robot,
     )
     try:
         logger = TraceLogger(job_id=recipe.job_id, out_path=Path("logs") / f"{recipe.job_id}.jsonl")
-        moveit_scene = MoveItSceneAdapter(moveit_py, robot=robot)
-        scene = moveit_scene
+        scene = MoveItSceneAdapter(moveit_py)
         if args.spawn_in_gazebo:
             scene = CompositeSceneAdapter([scene, GazeboSceneAdapter()])
-
-        if args.planner == "curobo":
-            if not robot.curobo_robot_yml:
-                raise SystemExit(f"--planner curobo: robot profile {robot.name!r} has no curobo_robot_yml")
-            planner = CuRoboPlannerAdapter(
-                moveit_py, moveit_scene, robot,
-                arm_joint_names=[], tip_link=robot.tip_link,
-                curobo_robot_yml=robot.curobo_robot_yml,
-            )
-        else:
-            planner = MoveItPlannerAdapter(moveit_py, robot=robot)
-
         ctx = SkillContext(
-            planner=planner,
-            execution=ROSExecutionAdapter(moveit_py, robot=robot),
+            planner=MoveItPlannerAdapter(moveit_py),
+            execution=ROSExecutionAdapter(moveit_py),
             scene=scene,
             logger=logger,
             job_id=recipe.job_id,
@@ -197,14 +120,11 @@ def main(argv: list[str] | None = None) -> int:
             f"({result.steps_completed}/{result.steps_total} steps)",
             file=sys.stderr,
         )
-        # Leave immediately, skipping MoveItCpp teardown - see _exit(). Placed
-        # inside the try so the finally below (which is what actually crashes)
-        # never runs on a normal finish; it still cleans up on an exception.
-        _exit(0 if result.status.value == "complete" else 1)
+        return 0 if result.status.value == "complete" else 1
     finally:
         moveit_py.shutdown()
         rclpy.shutdown()
 
 
 if __name__ == "__main__":
-    _exit(main() or 0)
+    raise SystemExit(main())

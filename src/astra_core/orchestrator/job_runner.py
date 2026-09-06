@@ -32,11 +32,6 @@ from astra_core.skills.retreat import retreat
 from astra_core.world.world_model import WorldModel
 
 
-# Held part must rise more than this during retreat to count as a real lift,
-# not settling noise.
-GRASP_LIFT_EPSILON_M = 0.002
-
-
 @dataclass(frozen=True)
 class JobResult:
     status: JobStatus
@@ -51,104 +46,42 @@ def _dispatch(step: Step, recipe: Recipe, world: WorldModel, skill_ctx: SkillCon
         grasp_pose = derive_grasp_pose(part_pose, part.grasp.grasp_offset_xyz)
         vec, dist = part.grasp.approach_vector, part.grasp.approach_distance
         if step.kind is StepKind.PICK_APPROACH:
-            # Re-observe: part may have settled/shifted since its nominal pose.
-            # No-op on backends that cannot sense.
-            observed = skill_ctx.scene.observe_pose(step.part_id)
-            if observed is not None:
-                world.apply_perception_correction(step.part_id, observed)
-                skill_ctx.scene.update_pose(step.part_id, observed)
-                part_pose = world.pose_of(step.part_id)
-                grasp_pose = derive_grasp_pose(part_pose, part.grasp.grasp_offset_xyz)
-                skill_ctx.logger.log(
-                    step="observe", part_id=step.part_id,
-                    observed_xyz=[round(float(v), 4) for v in observed.xyz],
-                )
-            # Exempt gripper vs. part from approach onward, not just at grasp:
-            # some recipes' approach distance is shorter than the gripper's
-            # finger length, so a fingertip is already inside the part here.
+            # Exempt the gripper against the part it is deliberately moving to
+            # envelop, from the approach onward rather than only at the grasp.
+            # A recipe may specify an approach distance shorter than the
+            # gripper's own finger length (one supplied part does: 0.1 m of
+            # standoff against ~0.103 m fingers), which puts a fingertip
+            # inside the part at the approach pose itself - verified live as
+            # a finger/part contact that blocked the approach before pick()
+            # had granted any exemption.
             skill_ctx.scene.allow_collision(step.part_id)
             return approach(skill_ctx, grasp_pose, vec, dist)
         if step.kind is StepKind.PICK:
             return pick(skill_ctx, step.part_id, part_pose, part.grasp.grasp_offset_xyz)
-        pose_before_lift = world.pose_of(step.part_id)
-        # Retreat far enough to clear the exclusion zone the part sits in, not
-        # merely the recipe's standoff distance (some recipes place a part
-        # inside a zone taller than that distance). Height is derived from
-        # recipe geometry, never hardcoded.
-        clearance = world.clearance_height_for(
-            pose_before_lift, part.shape, exempt=skill_ctx.work_holding
-        )
-        lift_dist = max(dist, clearance)
-        if lift_dist > dist:
-            skill_ctx.logger.log(
-                step="transit_lift", part_id=step.part_id,
-                recipe_distance_m=round(float(dist), 4),
-                required_m=round(float(clearance), 4),
-                reason="clear exclusion zone before transport",
-            )
-        outcome = retreat(skill_ctx, grasp_pose, vec, lift_dist)
-        if outcome.success:
-            # Physical grasp check: a held part has RISEN with the gripper.
-            # The gripper only reports its close command finished, which is
-            # also true when jaws shut on nothing.
-            observed = skill_ctx.scene.observe_pose(step.part_id)
-            if observed is not None:
-                lift = float(observed.xyz[2]) - float(pose_before_lift.xyz[2])
-                held = lift > GRASP_LIFT_EPSILON_M
-                skill_ctx.logger.log(
-                    step="verify_physical", skill="Retreat", part_id=step.part_id,
-                    lift_m=round(lift, 4), held=bool(held),
-                )
-                if not held:
-                    return SkillOutcome(
-                        success=False,
-                        plan_result=outcome.plan_result,
-                        execution_result=outcome.execution_result,
-                        pick_verified=False,
-                    )
-            # Restore collision checks now the part is lifted clear, so it
-            # can't sail through the zone in transit. Work-holding structure
-            # stays exempt: the part still has to be lowered into it.
-            _enforce_clear_obstacles(step.part_id, part.shape, world, skill_ctx)
-        return outcome
+        return retreat(skill_ctx, grasp_pose, vec, dist)
 
     if step.kind in (StepKind.PLACE_APPROACH, StepKind.PLACE, StepKind.PLACE_RETREAT):
         part = recipe.part(step.part_id)
         place_pose = part.assembly_pose
         vec, dist = part.grasp.approach_vector, part.grasp.approach_distance
         if step.kind is StepKind.PLACE_APPROACH:
-            # Re-evaluate now the part has been carried clear of its source.
-            _enforce_clear_obstacles(step.part_id, part.shape, world, skill_ctx)
             return approach(skill_ctx, place_pose, vec, dist)
         if step.kind is StepKind.PLACE:
             return place(skill_ctx, step.part_id, place_pose)
-        # Gripper-vs-part exemption is never restored after place: the
-        # recipe's retreat distance is shorter than the gripper's finger
-        # length, so restoring it would strand the arm in collision at its
-        # own start state. Arm links still collision-check against the part.
+        # NOTE: gripper-vs-part checking is deliberately never restored for a
+        # placed part. Withdrawing by the recipe's own retreat distance leaves
+        # the fingertips ~1 mm short of clearing the part's top face (that
+        # distance is shorter than the gripper's finger length), so restoring
+        # the check strands the arm in a start state that is in collision and
+        # nothing further can plan. Only the GRIPPER links stay exempt - every
+        # arm link still collision-checks against the placed part, so the arm
+        # cannot sweep through it, and the part is in its final assembled
+        # position by this point.
         return retreat(skill_ctx, place_pose, vec, dist)
 
     # JOINT_APPROACH
     joint = next(j for j in recipe.joints if j.id == step.joint_id)
     return approach_joint(skill_ctx, joint.pose, joint.approach_vector, joint.approach_distance)
-
-
-def _enforce_clear_obstacles(part_id: str, shape, world: WorldModel,
-                             skill_ctx: SkillContext) -> None:
-    """Re-enable collision checking of a carried part against every obstacle
-    it is currently clear of. A constraint the start state already violates
-    can't be enforced, so this is re-run as the part moves."""
-    overlapping = set(world.work_holding_obstacles(world.pose_of(part_id), shape))
-    enforceable = [
-        obstacle_id for obstacle_id in world.obstacles
-        if obstacle_id not in skill_ctx.work_holding and obstacle_id not in overlapping
-    ]
-    if enforceable:
-        skill_ctx.scene.disallow_collision(part_id, enforceable)
-    skill_ctx.logger.log(
-        step="transit_collision", part_id=part_id,
-        enforced=sorted(enforceable), exempt_still_overlapping=sorted(overlapping),
-    )
 
 
 def _classify(outcome: SkillOutcome):
@@ -227,25 +160,20 @@ def run_job(
     world = WorldModel.from_recipe(recipe)
     skill_ctx.world = world  # skills reach the live world model only through skill_ctx
     for obstacle in recipe.obstacles:
-        # True recipe geometry, unpadded - planning margin is applied inside
-        # the planner adapter (see MoveItSceneAdapter), not on the simulated
-        # body itself.
-        skill_ctx.scene.add_object(
-            obstacle.id, obstacle.shape, obstacle.pose,
-            movable=False,   # fixed cell structure, never manipulated
-        )
+        skill_ctx.scene.add_object(obstacle.id, obstacle.shape, obstacle.pose)
     for part in recipe.parts:
         skill_ctx.scene.add_object(part.id, part.shape, world.pose_of(part.id))
 
-    # Classify obstacles by geometry: one enclosing a part's ASSEMBLY pose is
-    # work-holding structure the arm must reach into, not a no-go volume.
-    # Keyed on assembly pose only - keying on source pose too would exempt
-    # every exclusion zone a part merely rests in, defeating obstacle
-    # avoidance for the arm itself.
+    # Classify obstacles by geometry: one that encloses a pose the robot is
+    # required to reach is work-holding structure, not an exclusion zone, and
+    # the arm must be able to enter it or the recipe cannot be executed at all
+    # (verified against the planner: reaching an assembly pose inside such an
+    # obstacle puts a forearm link through it). Obstacles enclosing no required
+    # pose are untouched and keep full collision checking.
     work_holding: set[str] = set()
     for part in recipe.parts:
-        work_holding.update(world.work_holding_obstacles(part.assembly_pose, part.shape))
-    skill_ctx.work_holding = frozenset(work_holding)
+        for pose in (part.source_pose, part.assembly_pose):
+            work_holding.update(world.work_holding_obstacles(pose, part.shape))
     for obstacle_id in sorted(work_holding):
         skill_ctx.scene.allow_arm_collision(obstacle_id)
         logger.log(step="world", obstacle=obstacle_id, classified="work_holding")
@@ -294,7 +222,9 @@ def run_job(
             return JobResult(status=job_ctx.status, steps_completed=step_index, steps_total=len(steps))
 
         enter_state(logger, State.REPLAN_RETRY, step_index=step_index, action=action.value)
-        # retry/re-plan/re-observe/safe-pose all mean "attempt this step again"
+        # loop again on the SAME step_index - retry/re-plan/re-observe/safe-pose
+        # all mean "attempt this step again"; the fault queue determines when
+        # (or whether) the mock stops failing.
 
     job_ctx.status = JobStatus.COMPLETE
     enter_state(logger, State.COMPLETE, steps_completed=len(steps))

@@ -1,10 +1,15 @@
-"""ScenePort implementation that spawns/moves real, physically-simulated box
-models in Gazebo (gz_sim) for every recipe part/obstacle - composed alongside
-MoveItSceneAdapter (see CompositeSceneAdapter below) so MoveIt's planning
-scene and Gazebo's physics world both reflect the same recipe geometry.
+"""ScenePort implementation that spawns/moves REAL, physically-simulated box
+models in Gazebo (gz_sim) for every recipe part/obstacle - composed
+alongside MoveItSceneAdapter (see CompositeSceneAdapter below) so MoveIt's
+planning-scene collision model and Gazebo's own physics world both reflect
+the same recipe geometry. Without this, parts/obstacles exist only as
+abstract MoveIt/RViz collision geometry and are invisible in Gazebo itself
+(confirmed live - the robot moved through empty space in the Gazebo view).
 
-Shells out to ros_gz_sim's CLI tools rather than gz-transport Python
-bindings (not verified installed here). Confined to astra_ros/."""
+Shells out to ros_gz_sim's create/set_entity_pose CLI tools rather than
+gz-transport Python bindings (not verified installed here), matching this
+repo's existing pattern of using ROS2 CLI tools from Python where a stable
+Python API isn't available. Confined to astra_ros/."""
 from __future__ import annotations
 
 from collections.abc import Sequence
@@ -17,32 +22,16 @@ from astra_core.ports.scene_port import ScenePort
 from astra_core.recipe.models import Shape
 
 
-# Underside of every part in the supplied recipes - the height a work surface
-# must present for parts to rest exactly at their recipe poses. Derived from
-# source_pose.z - size.z/2, which is 0.0825 for both parts in both variants.
-WORKTABLE_TOP_Z = 0.0825
-WORKTABLE_SIZE = (1.6, 1.6, 0.05)
-
-
-def _box_sdf(object_id: str, shape: Shape, *, static: bool, mass: float = 0.1) -> str:
-    """A real rigid body for Gazebo. Parts are dynamic so the gripper can
-    actually grasp them - static bodies are effectively infinite mass and
-    stall the fingers past their joint limits. Friction is set explicitly
-    since gz's default is too low to hold a grasped part in the jaws."""
+def _box_sdf(object_id: str, shape: Shape) -> str:
     sx, sy, sz = (float(v) for v in shape.size)
-    # Thin-box inertia tensor.
-    ixx = mass * (sy * sy + sz * sz) / 12.0
-    iyy = mass * (sx * sx + sz * sz) / 12.0
-    izz = mass * (sx * sx + sy * sy) / 12.0
     return f"""<?xml version="1.0" ?>
 <sdf version="1.6">
   <model name="{object_id}">
-    <static>{'true' if static else 'false'}</static>
     <link name="body">
       <inertial>
-        <mass>{mass}</mass>
-        <inertia><ixx>{ixx}</ixx><ixy>0</ixy><ixz>0</ixz>
-                 <iyy>{iyy}</iyy><iyz>0</iyz><izz>{izz}</izz></inertia>
+        <mass>0.1</mass>
+        <inertia><ixx>0.0001</ixx><ixy>0</ixy><ixz>0</ixz>
+                  <iyy>0.0001</iyy><iyz>0</iyz><izz>0.0001</izz></inertia>
       </inertial>
       <visual name="visual">
         <geometry><box><size>{sx} {sy} {sz}</size></box></geometry>
@@ -50,41 +39,6 @@ def _box_sdf(object_id: str, shape: Shape, *, static: bool, mass: float = 0.1) -
       </visual>
       <collision name="collision">
         <geometry><box><size>{sx} {sy} {sz}</size></box></geometry>
-        <surface>
-          <!-- Matched to the gripper pads (grip_surface macro in
-               config/ur_gazebo.urdf.xacro) - both surfaces need friction or
-               the part slides straight out of the jaws. -->
-          <friction>
-            <ode><mu>2.0</mu><mu2>2.0</mu2></ode>
-          </friction>
-          <contact>
-            <ode><kp>1e6</kp><kd>50</kd><min_depth>0.0005</min_depth><max_vel>0.0</max_vel></ode>
-          </contact>
-        </surface>
-      </collision>
-    </link>
-  </model>
-</sdf>"""
-
-
-def _worktable_sdf() -> str:
-    """The cell's work surface. Top is placed at the parts' own underside
-    height, so they rest exactly where the recipe puts them."""
-    sx, sy, sz = WORKTABLE_SIZE
-    return f"""<?xml version="1.0" ?>
-<sdf version="1.6">
-  <model name="worktable">
-    <static>true</static>
-    <link name="body">
-      <visual name="visual">
-        <geometry><box><size>{sx} {sy} {sz}</size></box></geometry>
-        <material><ambient>0.4 0.35 0.3 1</ambient><diffuse>0.5 0.45 0.4 1</diffuse></material>
-      </visual>
-      <collision name="collision">
-        <geometry><box><size>{sx} {sy} {sz}</size></box></geometry>
-        <surface>
-          <friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction>
-        </surface>
       </collision>
     </link>
   </model>
@@ -92,17 +46,22 @@ def _worktable_sdf() -> str:
 
 
 class GazeboSceneAdapter(ScenePort):
-    """Spawn + pose-sync. attach()/detach() are no-ops - grasping is real
-    contact/friction physics, not a scripted joint (see attach() below)."""
+    """Stage 1: spawn + pose-sync only. attach()/detach() do not yet create a
+    real physical grip in Gazebo (that needs gz_sim's DetachableJoint system,
+    dynamically loaded via gz-transport's /entity/system/add service - a
+    separate, more involved piece not yet built; see
+    docs/moveit2_integration_notes.md). detach() at least drops the object
+    back at its place pose, matching MoveIt's own detach behavior."""
 
-    def __init__(self, world: str = "empty") -> None:
+    def __init__(self) -> None:
         self._spawned: set[str] = set()
-        self._worktable_spawned = False
-        self._world = world
-        self._pending_spawns: list[subprocess.Popen] = []
 
-    # A hung CLI call must never block the autonomy layer, so every call is
-    # bounded and a miss is reported rather than awaited.
+    # These shell out to ROS CLI tools that talk to Gazebo over its own
+    # transport. A call that never returns would hang the whole job silently
+    # with no log line (observed live: the run stopped dead after a successful
+    # place, mid-detach, and sat there until the launch was killed). This
+    # visualisation mirror must never be able to block the autonomy layer, so
+    # every call is bounded and a miss is reported rather than awaited.
     _CLI_TIMEOUT_S = 10.0
 
     def _run(self, argv: list[str], what: str) -> None:
@@ -118,107 +77,42 @@ class GazeboSceneAdapter(ScenePort):
             print(f"[gazebo_scene] {what} failed (rc={result.returncode}); "
                   "Gazebo view may be stale", file=sys.stderr)
 
-    def _spawn_async(self, argv: list[str]) -> None:
-        """Fire a spawn without waiting - every object in a recipe is
-        independent at spawn time, so no need to serialise the CLI overhead
-        per object."""
-        self._pending_spawns.append(subprocess.Popen(argv))
-
-    def _ensure_worktable(self) -> None:
-        if self._worktable_spawned:
-            return
-        self._worktable_spawned = True
-        z = WORKTABLE_TOP_Z - WORKTABLE_SIZE[2] / 2.0
-        self._spawn_async(
-            ["ros2", "run", "ros_gz_sim", "create",
-             "-string", _worktable_sdf(), "-name", "worktable",
-             "-x", "0", "-y", "0", "-z", str(z)],
-        )
-
-    def _spawn_or_move(self, object_id: str, shape: Shape, pose: Pose,
-                       movable: bool = True) -> None:
+    def _spawn_or_move(self, object_id: str, shape: Shape, pose: Pose) -> None:
         rpy = pose.to_rpy()
         if object_id not in self._spawned:
-            self._ensure_worktable()
-            self._spawn_async(
+            self._run(
                 [
                     "ros2", "run", "ros_gz_sim", "create",
-                    "-string", _box_sdf(object_id, shape, static=not movable),
+                    "-string", _box_sdf(object_id, shape),
                     "-name", object_id,
                     "-x", str(pose.xyz[0]), "-y", str(pose.xyz[1]), "-z", str(pose.xyz[2]),
                     "-R", str(rpy[0]), "-P", str(rpy[1]), "-Y", str(rpy[2]),
                 ],
+                f"spawn {object_id}",
             )
             self._spawned.add(object_id)
         else:
-            self._set_pose(object_id, pose)
-
-    def _set_pose(self, object_id: str, pose: Pose) -> None:
-        """Move an already-spawned model via gz-transport's own set_pose.
-        Not `ros2 run ros_gz_sim set_entity_pose`: that wrapper never returns
-        for the static models used here."""
-        qx, qy, qz, qw = (float(v) for v in pose.quat_xyzw)
-        x, y, z = (float(v) for v in pose.xyz)
-        request = (
-            f'name: "{object_id}", '
-            f"position: {{x: {x}, y: {y}, z: {z}}}, "
-            f"orientation: {{x: {qx}, y: {qy}, z: {qz}, w: {qw}}}"
-        )
-        self._run(
-            [
-                "gz", "service", "-s", f"/world/{self._world}/set_pose",
-                "--reqtype", "gz.msgs.Pose",
-                "--reptype", "gz.msgs.Boolean",
-                "--timeout", "3000",
-                "--req", request,
-            ],
-            f"move {object_id}",
-        )
-
-    def observe_pose(self, object_id: str) -> Pose | None:
-        """The object's actual pose in the simulator, or None if unreadable.
-        Stands in for a perception sensor: parts are dynamic bodies, so where
-        one really is and where the recipe says it is can differ once it has
-        settled or been nudged."""
-        try:
-            result = subprocess.run(
-                ["gz", "model", "-m", object_id, "-p"],
-                check=False, capture_output=True, text=True,
-                timeout=self._CLI_TIMEOUT_S,
+            self._run(
+                [
+                    "ros2", "run", "ros_gz_sim", "set_entity_pose",
+                    "--name", object_id,
+                    "--pos", str(pose.xyz[0]), str(pose.xyz[1]), str(pose.xyz[2]),
+                    "--euler", str(rpy[0]), str(rpy[1]), str(rpy[2]),
+                ],
+                f"move {object_id}",
             )
-        except subprocess.TimeoutExpired:
-            return None
-        if result.returncode != 0:
-            return None
-        # "Pose [ XYZ (m) ] [ RPY (rad) ]:" then a line of xyz, then rpy.
-        lines = [ln.strip() for ln in result.stdout.splitlines()]
-        for i, line in enumerate(lines):
-            if line.startswith("[") and i + 1 < len(lines) and lines[i + 1].startswith("["):
-                try:
-                    xyz = [float(v) for v in lines[i].strip("[]").split()]
-                    rpy = [float(v) for v in lines[i + 1].strip("[]").split()]
-                except ValueError:
-                    continue
-                if len(xyz) == 3 and len(rpy) == 3:
-                    return Pose.from_xyz_rpy(xyz, rpy)
-        return None
 
-    def add_object(self, object_id: str, shape: Shape, pose: Pose,
-                   movable: bool = True) -> None:
-        self._spawn_or_move(object_id, shape, pose, movable)
+    def add_object(self, object_id: str, shape: Shape, pose: Pose) -> None:
+        self._spawn_or_move(object_id, shape, pose)
 
     def update_pose(self, object_id: str, pose: Pose) -> None:
         self._spawn_or_move(object_id, None, pose)  # shape unused once spawned
 
     def attach(self, object_id: str) -> None:
-        # Nothing to do: the gripper is physically closed on the part, so
-        # contact and friction carry it.
-        pass
+        pass  # Stage 2, not yet implemented
 
     def detach(self, object_id: str, pose: Pose) -> None:
-        # Nothing to do: physics decides where the part ends up, which is
-        # what shows whether the grasp actually worked.
-        pass
+        self.update_pose(object_id, pose)
 
     def allow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
         pass  # MoveIt-side concept only; Gazebo has its own real contact physics
@@ -236,10 +130,9 @@ class CompositeSceneAdapter(ScenePort):
     def __init__(self, adapters: list[ScenePort]) -> None:
         self._adapters = adapters
 
-    def add_object(self, object_id: str, shape: Shape, pose: Pose,
-                   movable: bool = True) -> None:
+    def add_object(self, object_id: str, shape: Shape, pose: Pose) -> None:
         for a in self._adapters:
-            a.add_object(object_id, shape, pose, movable)
+            a.add_object(object_id, shape, pose)
 
     def update_pose(self, object_id: str, pose: Pose) -> None:
         for a in self._adapters:
@@ -260,21 +153,6 @@ class CompositeSceneAdapter(ScenePort):
     def disallow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
         for a in self._adapters:
             a.disallow_collision(object_id, with_ids)
-
-    def observe_pose(self, object_id: str) -> Pose | None:
-        for adapter in self._adapters:
-            observe = getattr(adapter, "observe_pose", None)
-            if observe is None:
-                continue
-            pose = observe(object_id)
-            if pose is not None:
-                return pose
-        return None
-
-    def sync_view(self) -> None:
-        # Deliberately empty: a carried part's pose is the physics engine's
-        # to decide, not MoveIt's.
-        pass
 
     def allow_arm_collision(self, object_id: str) -> None:
         for a in self._adapters:

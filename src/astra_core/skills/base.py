@@ -24,10 +24,6 @@ class SkillContext:
     logger: TraceLogger
     job_id: str
     world: WorldModel | None = None
-    # Obstacle ids classified as work-holding structure at world build
-    # (see WorldModel.work_holding_obstacles) - the arm and a carried
-    # part may enter these; every other obstacle stays fully enforced.
-    work_holding: frozenset[str] = frozenset()
 
 
 def obstacle_ids(ctx: "SkillContext") -> tuple[str, ...]:
@@ -68,10 +64,6 @@ def plan_and_execute(ctx: SkillContext, skill_name: str, target: Pose) -> SkillO
         return SkillOutcome(success=False, plan_result=plan_result)
 
     exec_result = ctx.execution.execute(plan_result.trajectory)
-    # The robot has moved, so anything it is carrying has moved with it. Let
-    # the scene refresh any external view of that; no-op unless a backend
-    # actually mirrors the scene somewhere (see ScenePort.sync_view).
-    ctx.scene.sync_view()
     ctx.logger.log(
         step="execute",
         skill=skill_name,

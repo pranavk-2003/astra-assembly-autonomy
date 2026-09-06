@@ -27,7 +27,8 @@ planning_pipelines:
 start_state_max_bounds_error: 0.01
 
 plan_request_params:
-  planning_attempts: 1
+  planning_attempts: 2
+  planning_time: 3.0
   planning_pipeline: ompl
   # Deliberately well below full speed. These arms are driven through a
   # position command interface, which has no feed-forward: the faster the

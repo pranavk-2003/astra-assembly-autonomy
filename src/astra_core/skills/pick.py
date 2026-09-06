@@ -34,6 +34,11 @@ def pick(ctx: SkillContext, part_id: str, part_pose: Pose, grasp_offset_xyz) -> 
     ctx.execution.attach(part_id)
     ctx.world.attach(part_id)
 
+    # NOTE: whether the part is REALLY held cannot be judged here - nothing has
+    # lifted yet. The gripper only reports that its close command completed,
+    # which it does whether or not anything is between the jaws. The physical
+    # check happens after the retreat, once there has been a lift to measure
+    # (see the PICK_RETREAT branch in the orchestrator).
     verified = ctx.execution.verify_grasp(part_id)
     ctx.logger.log(step="verify", skill="Pick", part_id=part_id, pick_verified=verified)
     if not verified:

@@ -40,6 +40,35 @@ class WorldModel:
     def apply_perception_correction(self, part_id: str, corrected_pose: Pose) -> None:
         self.parts[part_id].apply_correction(corrected_pose)
 
+    def clearance_height_for(self, pose: Pose, shape: Shape,
+                             exempt: frozenset[str] = frozenset(),
+                             margin_m: float = 0.02) -> float:
+        """Height a part must be RAISED to so it clears every exclusion zone it
+        currently overlaps, or 0.0 if it already clears them all.
+
+        A part whose source pose lies inside an exclusion zone cannot have that
+        zone enforced while it sits there - the constraint is violated before
+        anything moves. Lifting it above the zone first makes the constraint
+        satisfiable, so it can be enforced for the rest of the journey rather
+        than waived for the whole job.
+
+        Derived from the recipe's own geometry: obstacle tops and the part's
+        own height. `exempt` names structure the robot is meant to work inside
+        (a jig), which is not something to climb over.
+        """
+        lo, _ = _aabb(pose, shape)
+        highest_top = 0.0
+        for obstacle_id, obstacle in self.obstacles.items():
+            if obstacle_id in exempt:
+                continue
+            if not _boxes_overlap(pose, shape, obstacle.pose, obstacle.shape):
+                continue
+            _, obstacle_hi = _aabb(obstacle.pose, obstacle.shape)
+            highest_top = max(highest_top, float(obstacle_hi[2]))
+        if highest_top == 0.0:
+            return 0.0
+        return max(0.0, highest_top + margin_m - float(lo[2]))
+
     def work_holding_obstacles(self, pose: Pose, shape: Shape) -> tuple[str, ...]:
         """Obstacle ids whose volume encloses a pose the robot is REQUIRED to
         reach with a part of this shape.

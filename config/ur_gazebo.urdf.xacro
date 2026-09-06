@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<!--
+  UR5e + Robotiq 2F-85 for the Gazebo (gz_sim) demo, mirroring
+  config/panda_gazebo.urdf.xacro.
+
+  Arm and gripper both come from their upstream description packages
+  unmodified, joined by robotiq_description's own UR coupling adapter - the
+  same combination used on real UR cells rather than an approximation:
+
+    ur_description        UR5e arm
+    robotiq_description   2F-85 gripper, its UR adapter plate, and the
+                          gripper's gz_ros2_control block (sim_ignition)
+
+  This file adds only what is specific to running that pair in gz_sim: the
+  world anchor, and the ARM's gz_ros2_control block (ur_description ships
+  mock/real hardware interfaces only).
+-->
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur">
+
+  <xacro:arg name="ur_type" default="ur5e"/>
+  <!-- supplied by the launch file; see demo_gazebo_ur.launch.py -->
+  <xacro:arg name="controllers_config_path" default=""/>
+
+  <!-- The arm must be anchored to the world or it topples under gravity: an
+       SRDF virtual joint is a MoveIt-only construct with no effect on physics
+       (established on the Panda build). Declared first, as the arm parents
+       onto it. -->
+  <link name="world"/>
+
+  <!-- ===================== arm (upstream) ===================== -->
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+  <xacro:ur_robot
+      name="ur"
+      tf_prefix=""
+      parent="world"
+      joint_limits_parameters_file="$(find ur_description)/config/$(arg ur_type)/joint_limits.yaml"
+      kinematics_parameters_file="$(find ur_description)/config/$(arg ur_type)/default_kinematics.yaml"
+      physical_parameters_file="$(find ur_description)/config/$(arg ur_type)/physical_parameters.yaml"
+      visual_parameters_file="$(find ur_description)/config/$(arg ur_type)/visual_parameters.yaml">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:ur_robot>
+
+  <!-- ============ coupling plate + gripper (upstream) ============ -->
+  <xacro:include filename="$(find robotiq_description)/urdf/ur_to_robotiq_adapter.urdf.xacro"/>
+  <xacro:ur_to_robotiq prefix="" connected_to="tool0" rotation="0.0"/>
+
+  <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_85_macro.urdf.xacro"/>
+  <!-- include_ros2_control:=false: the vendor's own block hardcodes the
+       knuckle's initial position to 0.7929 rad, i.e. the gripper spawns
+       0.007 rad from its 0.8 rad limit. Physics jitter then carries it past
+       the limit and MoveIt rejects every subsequent plan with "start state is
+       outside bounds" (measured at 0.8034). The joint interfaces are declared
+       below instead, starting OPEN - which is also the right state to begin a
+       pick from. The gripper's kinematics, meshes and mimic linkage still come
+       from the vendor package unchanged. -->
+  <xacro:robotiq_gripper
+      name="RobotiqGripperHardwareInterface"
+      prefix=""
+      parent="ur_to_robotiq_link"
+      sim_ignition="true"
+      include_ros2_control="false">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:robotiq_gripper>
+
+  <!-- Grasp TCP: the frame the planner drives to a grasp pose.
+       Without it the planner poses tool0 itself at the target and the whole
+       gripper sits ~0.15 m too deep, driving the fingers through the part and
+       into the table.
+
+       Placed 0.125 m out, not at the pads (~0.15 m), and the 0.025 m
+       difference is deliberate. The recipes specify grasp_offset_xyz
+       [0, 0, +0.025], so the grasp pose sits 25 mm above a part's origin -
+       above its top face for a 35 mm-tall bar. Holding the TCP 25 mm nearer
+       the flange cancels that, putting the PADS on the part's centre so the
+       jaws straddle it. Set the TCP at the pads instead and the gripper hovers
+       just clear of the part and closes on nothing (observed exactly that). -->
+  <link name="grasp_tcp"/>
+  <joint name="grasp_tcp_joint" type="fixed">
+    <parent link="tool0"/>
+    <child link="grasp_tcp"/>
+    <origin xyz="0 0 0.125" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ============ gripper contact properties ============
+       The vendor description defines no surface friction, so the pads default
+       to a low value and a grasped part simply slides out of the jaws. A real
+       2F-85 has rubber pads; mu 2.0 is a reasonable rubber-on-metal
+       coefficient and is what makes a friction grasp hold at sane grip forces.
+       High kp with damping keeps the contact stiff enough that the pads do not
+       sink into the part and lose grip, without the jitter a rigid contact
+       causes. Applied to every link that can touch the workpiece. -->
+  <xacro:macro name="grip_surface" params="link_name">
+    <gazebo reference="${link_name}">
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+      <kp>1e6</kp>
+      <kd>50</kd>
+      <minDepth>0.0005</minDepth>
+      <maxVel>0.0</maxVel>
+    </gazebo>
+  </xacro:macro>
+  <xacro:grip_surface link_name="robotiq_85_left_finger_tip_link"/>
+  <xacro:grip_surface link_name="robotiq_85_right_finger_tip_link"/>
+  <xacro:grip_surface link_name="robotiq_85_left_finger_link"/>
+  <xacro:grip_surface link_name="robotiq_85_right_finger_link"/>
+  <xacro:grip_surface link_name="robotiq_85_left_inner_knuckle_link"/>
+  <xacro:grip_surface link_name="robotiq_85_right_inner_knuckle_link"/>
+
+  <!-- ================= arm gz_ros2_control ================= -->
+  <ros2_control name="URGazeboSystem" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+
+    <xacro:macro name="arm_joint" params="jname initial">
+      <joint name="${jname}">
+        <command_interface name="position"/>
+        <state_interface name="position"><param name="initial_value">${initial}</param></state_interface>
+        <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+      </joint>
+    </xacro:macro>
+
+    <!-- Elbow-up start posture clear of the table; the UR equivalent of the
+         Panda's factory "ready" pose. Mirrored in ur.srdf's "home" state. -->
+    <xacro:arm_joint jname="shoulder_pan_joint"  initial="0.0"/>
+    <xacro:arm_joint jname="shoulder_lift_joint" initial="-1.57"/>
+    <xacro:arm_joint jname="elbow_joint"         initial="1.57"/>
+    <xacro:arm_joint jname="wrist_1_joint"       initial="-1.57"/>
+    <xacro:arm_joint jname="wrist_2_joint"       initial="-1.57"/>
+    <xacro:arm_joint jname="wrist_3_joint"       initial="0.0"/>
+
+    <!-- Robotiq 2F-85: one actuated knuckle, five mimic joints. Starts open
+         (0.02 rad, just off the limit), unlike the vendor default of nearly
+         closed.
+
+         Position-commanded, with the grip coming from friction at the pads
+         (mu 2.0 on both pad and part - see the grip_surface macro below).
+         Measured holding a part through a 119 mm lift. An effort interface
+         would give a directly controlled clamping force and is the better
+         answer if friction proves marginal, but it is a larger change and
+         this is currently carrying the load. -->
+    <joint name="robotiq_85_left_knuckle_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.02</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <xacro:macro name="knuckle_mimic" params="jname multiplier">
+      <joint name="${jname}">
+        <param name="mimic">robotiq_85_left_knuckle_joint</param>
+        <param name="multiplier">${multiplier}</param>
+      </joint>
+    </xacro:macro>
+    <xacro:knuckle_mimic jname="robotiq_85_right_knuckle_joint"        multiplier="-1"/>
+    <xacro:knuckle_mimic jname="robotiq_85_left_inner_knuckle_joint"   multiplier="1"/>
+    <xacro:knuckle_mimic jname="robotiq_85_right_inner_knuckle_joint"  multiplier="-1"/>
+    <xacro:knuckle_mimic jname="robotiq_85_left_finger_tip_joint"      multiplier="-1"/>
+    <xacro:knuckle_mimic jname="robotiq_85_right_finger_tip_joint"     multiplier="1"/>
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(arg controllers_config_path)</parameters>
+      <ros>
+        <!-- Let joint_state_restamp own /joint_states; see
+             docs/moveit2_integration_notes.md (moveit2#2940). -->
+        <remapping>/joint_states:=/joint_states_raw</remapping>
+      </ros>
+    </plugin>
+  </gazebo>
+
+</robot>

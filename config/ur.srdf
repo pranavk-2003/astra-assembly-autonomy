@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<!--
+  SRDF for UR5e + Robotiq 2F-85 (config/ur_gazebo.urdf.xacro).
+
+  Written here rather than taken from ur_moveit_config because that package
+  describes a bare arm - no gripper group, no open/close states - and the skill
+  layer needs both to perform a grasp. Group and state NAMES match
+  astra_ros.robot_profile.UR, so changing arms stays a profile change.
+
+  The 2F-85 is linkage-driven: robotiq_85_left_knuckle_joint is the only
+  actuated joint and the remaining five follow it via URDF mimic tags, so the
+  "hand" group has one active joint and the rest are declared passive.
+-->
+<robot name="ur">
+
+  <!-- ========================= groups ========================= -->
+  <group name="ur_manipulator">
+    <chain base_link="base_link" tip_link="tool0"/>
+  </group>
+
+  <group name="hand">
+    <joint name="robotiq_85_left_knuckle_joint"/>
+    <passive_joint name="robotiq_85_right_knuckle_joint"/>
+    <passive_joint name="robotiq_85_left_inner_knuckle_joint"/>
+    <passive_joint name="robotiq_85_right_inner_knuckle_joint"/>
+    <passive_joint name="robotiq_85_left_finger_tip_joint"/>
+    <passive_joint name="robotiq_85_right_finger_tip_joint"/>
+  </group>
+
+  <group name="ur_manipulator_hand">
+    <group name="ur_manipulator"/>
+    <group name="hand"/>
+  </group>
+
+  <!-- ====================== named states ====================== -->
+  <!-- Elbow-up start posture, matching the URDF's initial joint values. -->
+  <group_state name="home" group="ur_manipulator">
+    <joint name="shoulder_pan_joint" value="0"/>
+    <joint name="shoulder_lift_joint" value="-1.57"/>
+    <joint name="elbow_joint" value="1.57"/>
+    <joint name="wrist_1_joint" value="-1.57"/>
+    <joint name="wrist_2_joint" value="-1.57"/>
+    <joint name="wrist_3_joint" value="0"/>
+  </group_state>
+
+  <!-- A grasp is "plan to a named state and execute" - see
+       ROSExecutionAdapter._move_gripper. On the 2F-85 the knuckle angle runs
+       0.0 rad (fully open, 85 mm jaw) to 0.8 rad (closed); the recipes' widest
+       part is 45 mm, so fully open clears it comfortably. -->
+  <!-- 0.02, not the 0.0 limit: a joint commanded to its exact limit gets
+       carried just past it by solver noise, and MoveIt then rejects every
+       later plan ("outside bounds by [-0.000484]"). 0.02 rad is ~83 mm of
+       jaw - still far wider than the 45 mm part. -->
+  <group_state name="open" group="hand">
+    <joint name="robotiq_85_left_knuckle_joint" value="0.02"/>
+  </group_state>
+  <!-- Not the 0.8 rad hard limit: commanding a joint's exact limit lets the
+       solver overshoot it by a rounding error, and MoveIt then rejects every
+       later plan with "start state is outside bounds by [0.800027]". 0.7 rad
+       still closes well past the ~0.38 rad a 45 mm part needs, so the jaws
+       stall against the workpiece and grip it. -->
+  <group_state name="close" group="hand">
+    <joint name="robotiq_85_left_knuckle_joint" value="0.7"/>
+  </group_state>
+
+  <end_effector name="gripper" parent_link="tool0" group="hand"
+                parent_group="ur_manipulator"/>
+
+  <!-- The base is anchored by a real fixed joint in the URDF; this is only
+       MoveIt's own view of the same constraint. -->
+  <virtual_joint name="fixed_base" type="fixed" parent_frame="world" child_link="base_link"/>
+
+  <!-- =================== collision exclusions =================== -->
+  <!-- Arm chain -->
+  <disable_collisions link1="base_link_inertia" link2="shoulder_link" reason="Adjacent"/>
+  <disable_collisions link1="shoulder_link" link2="upper_arm_link" reason="Adjacent"/>
+  <disable_collisions link1="upper_arm_link" link2="forearm_link" reason="Adjacent"/>
+  <disable_collisions link1="forearm_link" link2="wrist_1_link" reason="Adjacent"/>
+  <disable_collisions link1="wrist_1_link" link2="wrist_2_link" reason="Adjacent"/>
+  <disable_collisions link1="wrist_2_link" link2="wrist_3_link" reason="Adjacent"/>
+  <disable_collisions link1="wrist_1_link" link2="wrist_3_link" reason="Never"/>
+
+  <!-- Wrist to coupling plate to gripper body -->
+  <disable_collisions link1="wrist_3_link" link2="ur_to_robotiq_link" reason="Adjacent"/>
+  <disable_collisions link1="wrist_2_link" link2="ur_to_robotiq_link" reason="Never"/>
+  <disable_collisions link1="ur_to_robotiq_link" link2="robotiq_85_base_link" reason="Adjacent"/>
+  <disable_collisions link1="wrist_3_link" link2="robotiq_85_base_link" reason="Never"/>
+  <disable_collisions link1="wrist_2_link" link2="robotiq_85_base_link" reason="Never"/>
+
+  <!-- Gripper linkage: every pair within the 2F-85 is either adjacent in the
+       linkage or permanently close, so none of it is a meaningful collision. -->
+  <disable_collisions link1="robotiq_85_base_link" link2="robotiq_85_left_knuckle_link" reason="Adjacent"/>
+  <disable_collisions link1="robotiq_85_base_link" link2="robotiq_85_right_knuckle_link" reason="Adjacent"/>
+  <disable_collisions link1="robotiq_85_base_link" link2="robotiq_85_left_inner_knuckle_link" reason="Adjacent"/>
+  <disable_collisions link1="robotiq_85_base_link" link2="robotiq_85_right_inner_knuckle_link" reason="Adjacent"/>
+  <disable_collisions link1="robotiq_85_base_link" link2="robotiq_85_left_finger_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_base_link" link2="robotiq_85_right_finger_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_base_link" link2="robotiq_85_left_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_base_link" link2="robotiq_85_right_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_knuckle_link" link2="robotiq_85_left_finger_link" reason="Adjacent"/>
+  <disable_collisions link1="robotiq_85_right_knuckle_link" link2="robotiq_85_right_finger_link" reason="Adjacent"/>
+  <disable_collisions link1="robotiq_85_left_inner_knuckle_link" link2="robotiq_85_left_finger_tip_link" reason="Adjacent"/>
+  <disable_collisions link1="robotiq_85_right_inner_knuckle_link" link2="robotiq_85_right_finger_tip_link" reason="Adjacent"/>
+  <disable_collisions link1="robotiq_85_left_finger_link" link2="robotiq_85_left_finger_tip_link" reason="Default"/>
+  <disable_collisions link1="robotiq_85_right_finger_link" link2="robotiq_85_right_finger_tip_link" reason="Default"/>
+  <disable_collisions link1="robotiq_85_left_knuckle_link" link2="robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_right_knuckle_link" link2="robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_knuckle_link" link2="robotiq_85_right_knuckle_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_knuckle_link" link2="robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_right_knuckle_link" link2="robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_inner_knuckle_link" link2="robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_finger_link" link2="robotiq_85_right_finger_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_finger_tip_link" link2="robotiq_85_right_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_finger_link" link2="robotiq_85_right_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_right_finger_link" link2="robotiq_85_left_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_finger_link" link2="robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_right_finger_link" link2="robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_finger_link" link2="robotiq_85_right_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_right_finger_link" link2="robotiq_85_left_inner_knuckle_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_knuckle_link" link2="robotiq_85_left_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_right_knuckle_link" link2="robotiq_85_right_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_knuckle_link" link2="robotiq_85_right_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_right_knuckle_link" link2="robotiq_85_left_finger_tip_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_left_knuckle_link" link2="robotiq_85_right_finger_link" reason="Never"/>
+  <disable_collisions link1="robotiq_85_right_knuckle_link" link2="robotiq_85_left_finger_link" reason="Never"/>
+
+</robot>

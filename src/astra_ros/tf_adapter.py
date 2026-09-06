@@ -60,10 +60,20 @@ def to_planning_frame(pose: Pose) -> Pose:
 # and so the carried part's long axis matches its recipe orientation instead
 # of a fixed one (this was also the root cause of the exclusion-zone collision
 # on Retreat documented in docs/moveit2_integration_notes.md).
+# Default kept for callers that do not pass a profile; the real value per
+# robot lives in astra_ros.robot_profile.RobotProfile.grasp_base_rpy.
 GRIPPER_DOWN_BASE = Rotation.from_euler("xyz", [np.pi, 0.0, 0.0])
 
 
-def calibrate_gripper_orientation(pose: Pose) -> Pose:
+def calibrate_gripper_orientation(pose: Pose, base_rpy=None) -> Pose:
+    """Point the tool down at the work, rolled to follow the part's own yaw.
+
+    `base_rpy` is the robot's own down-facing orientation - see
+    RobotProfile.grasp_base_rpy. It differs between arms by the clocking of the
+    gripper on the flange, which is what decides whether the jaws close across
+    a part's width or along its length.
+    """
+    base = GRIPPER_DOWN_BASE if base_rpy is None else Rotation.from_euler("xyz", list(base_rpy))
     yaw = pose.to_rpy()[2]
-    composed = Rotation.from_euler("z", yaw) * GRIPPER_DOWN_BASE
+    composed = Rotation.from_euler("z", yaw) * base
     return Pose(xyz=pose.xyz, quat_xyzw=composed.as_quat())

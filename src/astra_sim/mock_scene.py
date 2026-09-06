@@ -15,7 +15,8 @@ class MockScene(ScenePort):
         self.attached_ids: set[str] = set()
         self.calls: list[tuple] = []
 
-    def add_object(self, object_id: str, shape: Shape, pose: Pose) -> None:
+    def add_object(self, object_id: str, shape: Shape, pose: Pose,
+                   movable: bool = True) -> None:
         self.objects[object_id] = (shape, pose)
         self.calls.append(("add", object_id))
 

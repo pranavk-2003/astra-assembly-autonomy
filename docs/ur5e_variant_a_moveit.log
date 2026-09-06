@@ -1,0 +1,776 @@
+[INFO] [launch]: All log files can be found below /home/pranav/.ros/log/2026-09-06-19-23-16-044995-vivobook-54463
+[INFO] [launch]: Default logging verbosity is set to INFO
+WARNING:root:[33;21mCannot infer URDF from `/opt/ros/jazzy/share/ur_moveit_config`. -- using config/ur.urdf[0m
+WARNING:root:[33;21mCannot infer SRDF from `/opt/ros/jazzy/share/ur_moveit_config`. -- using config/ur.srdf[0m
+[INFO] [gazebo-1]: process started with pid [54476]
+[INFO] [static_transform_publisher-2]: process started with pid [54477]
+[INFO] [robot_state_publisher-3]: process started with pid [54478]
+[INFO] [parameter_bridge-4]: process started with pid [54480]
+[INFO] [python3-5]: process started with pid [54481]
+[INFO] [create-6]: process started with pid [54482]
+[static_transform_publisher-2] [WARN] [1788702796.927921382] []: Old-style arguments are deprecated; see --help for new-style arguments
+[static_transform_publisher-2] [INFO] [1788702796.957416727] [static_transform_publisher]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'world' to 'base_link'
+[robot_state_publisher-3] [INFO] [1788702796.967649004] [robot_state_publisher]: Robot initialized
+[create-6] [INFO] [1788702796.985967439] [ros_gz_sim]: Requesting list of world names.
+[parameter_bridge-4] [INFO] [1788702797.016461160] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[create-6] [INFO] [1788702797.617956378] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[create-6] [INFO] [1788702797.632329902] [ros_gz_sim]: Entity creation successful.
+[INFO] [create-6]: process has finished cleanly [pid 54482]
+[INFO] [spawner-7]: process started with pid [54578]
+[INFO] [spawner-8]: process started with pid [54579]
+[INFO] [spawner-9]: process started with pid [54580]
+[spawner-9] [INFO] [1788702798.527744773] [spawner_ur_hand_controller]: waiting for service /controller_manager/list_controllers to become available...
+[gazebo-1] [INFO] [1788702799.760964596] [gz_ros_control]: [gz_ros2_control] Fixed joint [base_joint] (Entity=58)] is skipped
+[gazebo-1] [INFO] [1788702799.762757276] [gz_ros_control]: Loading controller_manager
+[gazebo-1] [INFO] [1788702799.794909325] [controller_manager]: Using ROS clock for triggering controller manager cycles.
+[gazebo-1] [INFO] [1788702799.804003166] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[gazebo-1] [WARN] [1788702799.809853543] [gz_ros_control]: Waiting RM to load and initialize hardware...
+[gazebo-1] [WARN] [1788702800.802895170] [controller_manager]: Waiting for data on 'robot_description' topic to finish initialization
+[gazebo-1] [INFO] [1788702800.945683113] [controller_manager]: Received robot description from topic.
+[gazebo-1] [INFO] [1788702800.945786622] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[gazebo-1] [INFO] [1788702800.953412345] [gz_ros_control]: The position_proportional_gain has been set to: 1
+[gazebo-1] [INFO] [1788702800.953524440] [gz_ros_control]: Loading joint: shoulder_pan_joint
+[gazebo-1] [INFO] [1788702800.953540751] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.953551322] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.953580538] [gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1788702800.953598162] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1788702800.953613160] [gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1788702800.953620635] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.953628009] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.953663567] [gz_ros_control]: Loading joint: shoulder_lift_joint
+[gazebo-1] [INFO] [1788702800.953673867] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.953680049] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.953689607] [gz_ros_control]: 			 found initial value: -1.570000
+[gazebo-1] [INFO] [1788702800.953697102] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1788702800.953703694] [gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1788702800.953710357] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.953715868] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.953733561] [gz_ros_control]: Loading joint: elbow_joint
+[gazebo-1] [INFO] [1788702800.953739954] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.953745645] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.953753339] [gz_ros_control]: 			 found initial value: 1.570000
+[gazebo-1] [INFO] [1788702800.953760102] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1788702800.953766525] [gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1788702800.953772967] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.953778718] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.953793907] [gz_ros_control]: Loading joint: wrist_1_joint
+[gazebo-1] [INFO] [1788702800.953800129] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.953805730] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.953818685] [gz_ros_control]: 			 found initial value: -1.570000
+[gazebo-1] [INFO] [1788702800.953825678] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1788702800.953832271] [gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1788702800.953838693] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.953844705] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.953860435] [gz_ros_control]: Loading joint: wrist_2_joint
+[gazebo-1] [INFO] [1788702800.953873039] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.953890533] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.953907926] [gz_ros_control]: 			 found initial value: -1.570000
+[gazebo-1] [INFO] [1788702800.953921272] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1788702800.953934958] [gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1788702800.953946370] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.953957100] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.953989513] [gz_ros_control]: Loading joint: wrist_3_joint
+[gazebo-1] [INFO] [1788702800.954000844] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.954006816] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.954014130] [gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1788702800.954021394] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1788702800.954027756] [gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1788702800.954034238] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.954072552] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.954092821] [gz_ros_control]: Loading joint: robotiq_85_left_knuckle_joint
+[gazebo-1] [INFO] [1788702800.954099634] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.954105505] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.954113260] [gz_ros_control]: 			 found initial value: 0.020000
+[gazebo-1] [INFO] [1788702800.954121616] [gz_ros_control]: 		 velocity
+[gazebo-1] [INFO] [1788702800.954128339] [gz_ros_control]: 			 found initial value: 0.000000
+[gazebo-1] [INFO] [1788702800.954135182] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.954140933] [gz_ros_control]: 		 position
+[gazebo-1] [INFO] [1788702800.954156874] [gz_ros_control]: Loading joint: robotiq_85_right_knuckle_joint
+[gazebo-1] [INFO] [1788702800.954166242] [gz_ros_control]: Joint 'robotiq_85_right_knuckle_joint'is mimicking joint 'robotiq_85_left_knuckle_joint' with multiplier: -1 and offset: 0
+[gazebo-1] [INFO] [1788702800.954173947] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.954179828] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.954198193] [gz_ros_control]: Loading joint: robotiq_85_left_inner_knuckle_joint
+[gazebo-1] [INFO] [1788702800.954206088] [gz_ros_control]: Joint 'robotiq_85_left_inner_knuckle_joint'is mimicking joint 'robotiq_85_left_knuckle_joint' with multiplier: 1 and offset: 0
+[gazebo-1] [INFO] [1788702800.954217149] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.954233831] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.954259230] [gz_ros_control]: Loading joint: robotiq_85_right_inner_knuckle_joint
+[gazebo-1] [INFO] [1788702800.954274419] [gz_ros_control]: Joint 'robotiq_85_right_inner_knuckle_joint'is mimicking joint 'robotiq_85_left_knuckle_joint' with multiplier: -1 and offset: 0
+[gazebo-1] [INFO] [1788702800.954286513] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.954297093] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.954317342] [gz_ros_control]: Loading joint: robotiq_85_left_finger_tip_joint
+[gazebo-1] [INFO] [1788702800.954331809] [gz_ros_control]: Joint 'robotiq_85_left_finger_tip_joint'is mimicking joint 'robotiq_85_left_knuckle_joint' with multiplier: -1 and offset: 0
+[gazebo-1] [INFO] [1788702800.954343702] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.954353211] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.954371646] [gz_ros_control]: Loading joint: robotiq_85_right_finger_tip_joint
+[gazebo-1] [INFO] [1788702800.954384501] [gz_ros_control]: Joint 'robotiq_85_right_finger_tip_joint'is mimicking joint 'robotiq_85_left_knuckle_joint' with multiplier: 1 and offset: 0
+[gazebo-1] [INFO] [1788702800.954396684] [gz_ros_control]: 	State:
+[gazebo-1] [INFO] [1788702800.954406122] [gz_ros_control]: 	Command:
+[gazebo-1] [INFO] [1788702800.954636554] [controller_manager]: Initialize hardware 'URGazeboSystem' 
+[gazebo-1] [WARN] [1788702800.954694776] [controller_manager.hardware_component.system.URGazeboSystem]: Executor is not available during hardware component initialization for 'URGazeboSystem'. Skipping node creation!
+[gazebo-1] [INFO] [1788702800.954851026] [controller_manager]: Successful initialization of hardware 'URGazeboSystem'
+[gazebo-1] [INFO] [1788702800.955119451] [controller_manager]: Activating component 'URGazeboSystem'.
+[gazebo-1] [INFO] [1788702800.955151593] [resource_manager]: 'configure' hardware 'URGazeboSystem' 
+[gazebo-1] [INFO] [1788702800.955163025] [gz_ros_control]: System Successfully configured!
+[gazebo-1] [INFO] [1788702800.955175579] [resource_manager]: Successful 'configure' of hardware 'URGazeboSystem'
+[gazebo-1] [INFO] [1788702800.955194635] [resource_manager]: 'activate' hardware 'URGazeboSystem' 
+[gazebo-1] [INFO] [1788702800.955221897] [resource_manager]: Successful 'activate' of hardware 'URGazeboSystem'
+[gazebo-1] [WARN] [1788702800.955358369] [controller_manager]: Component 'URGazeboSystem' does not have read or write statistics initialized, skipping registration.
+[gazebo-1] [INFO] [1788702800.955376965] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[gazebo-1] [WARN] [1788702802.019236214] [gz_ros_control]:  Desired controller update period (0.01 s) is slower than the gazebo simulation period (0.001 s).
+[gazebo-1] [INFO] [1788702802.421031786] [controller_manager]: Received robot description from topic.
+[gazebo-1] [WARN] [1788702802.421120737] [controller_manager]: ResourceManager has already loaded a urdf. Ignoring attempt to reload a robot description.
+[spawner-9] [INFO] [1788702802.545210518] [spawner_ur_hand_controller]: Setting controller param "params_file" to "['/tmp/launch_params_1obttzzk']" for ur_hand_controller
+[gazebo-1] [INFO] [1788702802.549869769] [controller_manager]: Loading controller : 'ur_hand_controller' of type 'position_controllers/GripperActionController'
+[gazebo-1] [INFO] [1788702802.549960272] [controller_manager]: Loading controller 'ur_hand_controller'
+[gazebo-1] [WARN] [1788702802.560709028] [controller_manager]: The use of remapping arguments to the controller_manager node is deprecated. Please use the '--controller-ros-args' argument of the spawner to pass remapping arguments to the controller node.
+[gazebo-1] [INFO] [1788702802.560787218] [controller_manager]: Controller 'ur_hand_controller' node arguments: --ros-args --params-file /home/pranav/client_assignment/astra-assembly-autonomy/config/ros2_controllers_ur.yaml --ros-args --remap /joint_states:=/joint_states_raw -p use_sim_time:=true --params-file /tmp/launch_params_1obttzzk --param use_sim_time:=true 
+[gazebo-1] [WARN] [1788702802.592820385] [ur_hand_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
+[spawner-9] [INFO] [1788702802.601585013] [spawner_ur_hand_controller]: Loaded ur_hand_controller
+[gazebo-1] [INFO] [1788702802.604130037] [controller_manager]: Configuring controller: 'ur_hand_controller'
+[gazebo-1] [INFO] [1788702802.604630727] [ur_hand_controller]: Action status changes will be monitored at 20.000000 Hz.
+[gazebo-1] [INFO] [1788702802.611673492] [controller_manager]: Activating controllers: [ ur_hand_controller ]
+[gazebo-1] [INFO] [1788702802.644297643] [controller_manager]: Successfully switched controllers!
+[spawner-9] [INFO] [1788702802.657844387] [spawner_ur_hand_controller]: Configured and activated ur_hand_controller
+[INFO] [spawner-9]: process has finished cleanly [pid 54580]
+[gazebo-1] [INFO] [1788702806.368531945] [controller_manager]: Configuring controller: 'ur_hand_controller'
+[gazebo-1] [ERROR] [1788702806.368624984] [controller_manager]: Controller 'ur_hand_controller' can not be configured from 'active' state.
+[gazebo-1] [INFO] [1788702809.612434424] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[gazebo-1] [INFO] [1788702809.612504178] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[gazebo-1] [WARN] [1788702809.618327651] [controller_manager]: The use of remapping arguments to the controller_manager node is deprecated. Please use the '--controller-ros-args' argument of the spawner to pass remapping arguments to the controller node.
+[gazebo-1] [INFO] [1788702809.618409307] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/pranav/client_assignment/astra-assembly-autonomy/config/ros2_controllers_ur.yaml --ros-args --remap /joint_states:=/joint_states_raw -p use_sim_time:=true --params-file /tmp/launch_params_4qm677ha --param use_sim_time:=true 
+[gazebo-1] [INFO] [1788702809.656035916] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[gazebo-1] [INFO] [1788702809.656182147] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[gazebo-1] [INFO] [1788702809.674076889] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[gazebo-1] [INFO] [1788702809.680717890] [controller_manager]: Successfully switched controllers!
+[gazebo-1] [INFO] [1788702812.588322048] [controller_manager]: Loading controller : 'ur_arm_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[gazebo-1] [INFO] [1788702812.588398325] [controller_manager]: Loading controller 'ur_arm_controller'
+[gazebo-1] [WARN] [1788702812.598223534] [controller_manager]: The use of remapping arguments to the controller_manager node is deprecated. Please use the '--controller-ros-args' argument of the spawner to pass remapping arguments to the controller node.
+[gazebo-1] [INFO] [1788702812.598315480] [controller_manager]: Controller 'ur_arm_controller' node arguments: --ros-args --params-file /home/pranav/client_assignment/astra-assembly-autonomy/config/ros2_controllers_ur.yaml --ros-args --remap /joint_states:=/joint_states_raw -p use_sim_time:=true --params-file /tmp/launch_params_r0gpx8kp --param use_sim_time:=true 
+[gazebo-1] [INFO] [1788702812.685641680] [controller_manager]: Configuring controller: 'ur_arm_controller'
+[gazebo-1] [INFO] [1788702812.686281778] [ur_arm_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[gazebo-1] [INFO] [1788702812.686366100] [ur_arm_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[gazebo-1] [INFO] [1788702812.686426616] [ur_arm_controller]: Using 'splines' interpolation method.
+[gazebo-1] [INFO] [1788702812.695950076] [ur_arm_controller]: Action status changes will be monitored at 20.00 Hz.
+[gazebo-1] [INFO] [1788702812.715466457] [ur_arm_controller]: Setting initial scaling factor to 1.000000
+[gazebo-1] [INFO] [1788702812.715531933] [ur_arm_controller]: No scaling interface set. This controller will not read speed scaling from the hardware.
+[gazebo-1] [INFO] [1788702812.723488898] [controller_manager]: Activating controllers: [ ur_arm_controller ]
+[gazebo-1] [INFO] [1788702812.728860202] [controller_manager]: Successfully switched controllers!
+[spawner-8] [INFO] [1788702813.363290573] [spawner_ur_arm_controller]: waiting for service /controller_manager/list_controllers to become available...
+[spawner-8] [WARN] [1788702814.441202166] [spawner_ur_arm_controller]: Controller already loaded, skipping load_controller
+[gazebo-1] [INFO] [1788702814.444008530] [controller_manager]: Configuring controller: 'ur_arm_controller'
+[gazebo-1] [ERROR] [1788702814.444094795] [controller_manager]: Controller 'ur_arm_controller' can not be configured from 'active' state.
+[spawner-8] [ERROR] [1788702814.455638019] [spawner_ur_arm_controller]: Failed to configure controller
+[ERROR] [spawner-8]: process has died [pid 54579, exit code 1, cmd '/opt/ros/jazzy/lib/controller_manager/spawner ur_arm_controller -c /controller_manager --ros-args --params-file /tmp/launch_params_5vgjtbkw'].
+[INFO] [bash-10]: process started with pid [55089]
+[spawner-7] [INFO] [1788702814.876316860] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[spawner-7] [WARN] [1788702815.414646500] [spawner_joint_state_broadcaster]: Controller already loaded, skipping load_controller
+[gazebo-1] [INFO] [1788702815.416812786] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[gazebo-1] [ERROR] [1788702815.416888331] [controller_manager]: Controller 'joint_state_broadcaster' can not be configured from 'active' state.
+[spawner-7] [ERROR] [1788702815.420292671] [spawner_joint_state_broadcaster]: Failed to configure controller
+[ERROR] [spawner-7]: process has died [pid 54578, exit code 1, cmd '/opt/ros/jazzy/lib/controller_manager/spawner joint_state_broadcaster --controller-manager /controller_manager --ros-args --params-file /tmp/launch_params_7kzhv_gz'].
+[INFO] [bash-10]: process has finished cleanly [pid 55089]
+[INFO] [bash-11]: process started with pid [55117]
+[INFO] [bash-11]: process has finished cleanly [pid 55117]
+[INFO] [python3-12]: process started with pid [55136]
+[python3-12] WARNING:root:[33;21mCannot infer URDF from `/opt/ros/jazzy/share/ur_moveit_config`. -- using config/ur.urdf[0m
+[python3-12] WARNING:root:[33;21mCannot infer SRDF from `/opt/ros/jazzy/share/ur_moveit_config`. -- using config/ur.srdf[0m
+[python3-12] [INFO] [1788702819.545133242] [moveit_2755251734.moveit.py.cpp_initializer]: Initialize rclcpp
+[python3-12] [INFO] [1788702819.545203547] [moveit_2755251734.moveit.py.cpp_initializer]: Initialize node parameters
+[python3-12] [INFO] [1788702819.545217804] [moveit_2755251734.moveit.py.cpp_initializer]: Initialize node and executor
+[python3-12] [INFO] [1788702819.555470761] [moveit_2755251734.moveit.py.cpp_initializer]: Spin separate thread
+[python3-12] [INFO] [1788702819.559777883] [moveit_2755251734.moveit.ros.rdf_loader]: Loaded robot model in 0.00408166 seconds
+[python3-12] [INFO] [1788702819.559868697] [moveit_2755251734.moveit.core.robot_model]: Loading robot model 'ur'...
+[python3-12] [INFO] [1788702819.582124597] [moveit_2755251734.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'ur_manipulator': 1 1 1 1 1 1
+[python3-12] [INFO] [1788702819.663177408] [moveit_2755251734.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[python3-12] [INFO] [1788702819.663387591] [moveit_2755251734.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
+[python3-12] [INFO] [1788702819.664567374] [moveit_2755251734.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[python3-12] [INFO] [1788702819.665417144] [moveit_2755251734.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[python3-12] [INFO] [1788702819.665443084] [moveit_2755251734.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
+[python3-12] [INFO] [1788702819.665595967] [moveit_2755251734.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[python3-12] [INFO] [1788702819.666142946] [moveit_2755251734.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[python3-12] [INFO] [1788702819.666492617] [moveit_2755251734.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[python3-12] [INFO] [1788702819.667370802] [moveit_2755251734.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
+[python3-12] [INFO] [1788702819.667401871] [moveit_2755251734.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[python3-12] [INFO] [1788702819.668067698] [moveit_2755251734.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
+[python3-12] [INFO] [1788702819.668673821] [moveit_2755251734.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[python3-12] [WARN] [1788702819.669113074] [moveit_2755251734.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[python3-12] [ERROR] [1788702819.669154042] [moveit_2755251734.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
+[python3-12] [INFO] [1788702819.696865236] [moveit_2755251734.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
+[python3-12] [INFO] [1788702819.698440929] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[python3-12] [INFO] [1788702819.699573341] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[python3-12] [INFO] [1788702819.699597898] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[python3-12] [INFO] [1788702819.699845212] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[python3-12] [INFO] [1788702819.699860472] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[python3-12] [INFO] [1788702819.699893916] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[python3-12] [INFO] [1788702819.699901160] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[python3-12] [INFO] [1788702819.699916589] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[python3-12] [INFO] [1788702819.701514835] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702819.703926410] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702819.703958011] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[python3-12] [INFO] [1788702819.706605189] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[python3-12] [INFO] [1788702819.706632110] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[python3-12] [INFO] [1788702819.707447054] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[python3-12] [INFO] [1788702819.711491752] [moveit_2755251734.moveit.planners.pilz.joint_limits_aggregator]: Reading limits from namespace robot_description_planning
+[python3-12] [INFO] [1788702819.719629501] [moveit_2755251734.moveit.planners.pilz.command_planner]: Available plugins: pilz_industrial_motion_planner/PlanningContextLoaderCIRC pilz_industrial_motion_planner/PlanningContextLoaderLIN pilz_industrial_motion_planner/PlanningContextLoaderPTP 
+[python3-12] [INFO] [1788702819.719705938] [moveit_2755251734.moveit.planners.pilz.command_planner]: About to load: pilz_industrial_motion_planner/PlanningContextLoaderCIRC
+[python3-12] [INFO] [1788702819.721691587] [moveit_2755251734.moveit.planners.pilz.command_planner]: Registered Algorithm [CIRC]
+[python3-12] [INFO] [1788702819.721744338] [moveit_2755251734.moveit.planners.pilz.command_planner]: About to load: pilz_industrial_motion_planner/PlanningContextLoaderLIN
+[python3-12] [INFO] [1788702819.723023652] [moveit_2755251734.moveit.planners.pilz.command_planner]: Registered Algorithm [LIN]
+[python3-12] [INFO] [1788702819.723066574] [moveit_2755251734.moveit.planners.pilz.command_planner]: About to load: pilz_industrial_motion_planner/PlanningContextLoaderPTP
+[python3-12] [INFO] [1788702819.724617840] [moveit_2755251734.moveit.planners.pilz.command_planner]: Registered Algorithm [PTP]
+[python3-12] [INFO] [1788702819.724670541] [moveit_2755251734.moveit.ros.planning_pipeline]: Successfully loaded planner 'Pilz Industrial Motion Planner'
+[python3-12] [INFO] [1788702819.726284246] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[python3-12] [INFO] [1788702819.726388496] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[python3-12] [INFO] [1788702819.726400199] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[python3-12] [INFO] [1788702819.726711606] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[python3-12] [INFO] [1788702819.726737415] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[python3-12] [INFO] [1788702819.726789305] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[python3-12] [INFO] [1788702819.726803943] [astra_run_job]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[python3-12] [INFO] [1788702819.726869749] [astra_run_job]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[python3-12] [INFO] [1788702819.728382150] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[python3-12] [INFO] [1788702819.729844666] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[python3-12] [INFO] [1788702819.729885043] [astra_run_job]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[python3-12] [INFO] [1788702819.730420971] [astra_run_job]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[python3-12] [INFO] [1788702819.769878777] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for ur_arm_controller
+[python3-12] [INFO] [1788702819.769998557] [moveit_2755251734.moveit.plugins.simple_controller_manager]: ur_hand_controller will command a max effort of: 100
+[python3-12] [INFO] [1788702819.775254248] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for ur_hand_controller
+[python3-12] [INFO] [1788702819.775634006] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702819.776616120] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702819.777716731] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[python3-12] {"ts": 1788702820.3065712, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "LOAD_JOB"}
+[python3-12] {"ts": 1788702820.307087, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VALIDATE"}
+[python3-12] {"ts": 1788702820.3423119, "job_id": "ASTRA_PRANAV_A", "step": "world", "obstacle": "fixture", "classified": "work_holding"}
+[python3-12] {"ts": 1788702820.3425455, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "BUILD_WORLD"}
+[python3-12] {"ts": 1788702820.3427246, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 0, "skill": "member_A:pick_approach"}
+[python3-12] [INFO] [1788702821.098194089] [ros_gz_sim]: Requesting list of world names.
+[python3-12] [INFO] [1788702821.114860376] [ros_gz_sim]: Requesting list of world names.
+[python3-12] [INFO] [1788702821.115296402] [ros_gz_sim]: Requesting list of world names.
+[python3-12] [INFO] [1788702821.131223261] [ros_gz_sim]: Requesting list of world names.
+[python3-12] [INFO] [1788702821.145922936] [ros_gz_sim]: Requesting list of world names.
+[python3-12] [WARN] [1788702821.315761026] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702821.315830750] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702821.316381616] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702821.316573925] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702821.316596569] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702821.316637768] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702821.316701279] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702821.317897293] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702821.318149978] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702821.346369465] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702821.349183953] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [ERROR] [1788702821.351126058] [moveit_2755251734.moveit.ros.validate_solution]: Computed path is not valid. Invalid states at index locations: [ 23 ] out of 32. Explanations follow in command line. Contacts are published on /display_contacts
+[python3-12] [INFO] [1788702821.351432466] [moveit_2755251734.moveit.core.moveit_collision_detection_fcl]: Found a contact between 'keepout' (type 'Object') and 'robotiq_85_right_finger_tip_link' (type 'Robot link'), which constitutes a collision. Contact information is not stored.
+[python3-12] [INFO] [1788702821.351472292] [moveit_2755251734.moveit.core.moveit_collision_detection_fcl]: Collision checking is considered complete (collision was found and 0 contacts are stored)
+[python3-12] [ERROR] [1788702821.351675051] [moveit_2755251734.moveit.ros.validate_solution]: Completed listing of explanations for invalid states.
+[python3-12] [ERROR] [1788702821.351996989] [astra_run_job]: PlanningResponseAdapter 'ValidateSolution' failed with error code INVALID_MOTION_PLAN
+[python3-12] {"ts": 1788702821.3530748, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.42, -0.3, 0.245], "plan_success": false, "plan_time_ms": 38.54, "failure_reason": "planning_failed"}
+[python3-12] {"ts": 1788702821.3535218, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 0, "skill": "member_A:pick_approach", "success": false}
+[python3-12] {"ts": 1788702821.3537695, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 0, "skill": "member_A:pick_approach", "failure_class": "planning_collision", "action": "replan", "attempt": 0}
+[python3-12] {"ts": 1788702821.353953, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "REPLAN_RETRY", "step_index": 0, "action": "replan"}
+[python3-12] {"ts": 1788702821.354123, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 0, "skill": "member_A:pick_approach"}
+[python3-12] [INFO] [1788702821.402156368] [ros_gz_sim]: Entity creation successful.
+[python3-12] [INFO] [1788702821.803008256] [ros_gz_sim]: Entity creation successful.
+[python3-12] [INFO] [1788702821.803062450] [ros_gz_sim]: Entity creation successful.
+[python3-12] [INFO] [1788702821.803080034] [ros_gz_sim]: Entity creation successful.
+[python3-12] [INFO] [1788702821.803142584] [ros_gz_sim]: Entity creation successful.
+[python3-12] {"ts": 1788702823.0140553, "job_id": "ASTRA_PRANAV_A", "step": "observe", "part_id": "member_A", "observed_xyz": [0.42, -0.3006, 0.1]}
+[python3-12] [WARN] [1788702823.014978779] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702823.015040497] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702823.015438009] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702823.015505950] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702823.015517001] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702823.015549523] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702823.015587376] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702823.016188449] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702823.016290364] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702823.058408276] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702823.065076355] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [ERROR] [1788702823.070302388] [moveit_2755251734.moveit.ros.validate_solution]: Computed path is not valid. Invalid states at index locations: [ 9 ] out of 60. Explanations follow in command line. Contacts are published on /display_contacts
+[python3-12] [INFO] [1788702823.070486331] [moveit_2755251734.moveit.core.moveit_collision_detection_fcl]: Found a contact between 'keepout' (type 'Object') and 'robotiq_85_left_finger_tip_link' (type 'Robot link'), which constitutes a collision. Contact information is not stored.
+[python3-12] [INFO] [1788702823.070508474] [moveit_2755251734.moveit.core.moveit_collision_detection_fcl]: Collision checking is considered complete (collision was found and 0 contacts are stored)
+[python3-12] [ERROR] [1788702823.070606472] [moveit_2755251734.moveit.ros.validate_solution]: Completed listing of explanations for invalid states.
+[python3-12] [ERROR] [1788702823.070884234] [astra_run_job]: PlanningResponseAdapter 'ValidateSolution' failed with error code INVALID_MOTION_PLAN
+[python3-12] {"ts": 1788702823.0711925, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.4200000995805301, -0.3005832412648296, 0.2449899999986375], "plan_success": false, "plan_time_ms": 56.734, "failure_reason": "planning_failed"}
+[python3-12] {"ts": 1788702823.071449, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 0, "skill": "member_A:pick_approach", "success": false}
+[python3-12] {"ts": 1788702823.0715923, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "RECOVERY", "step_index": 0, "skill": "member_A:pick_approach", "failure_class": "planning_collision", "action": "replan", "attempt": 1}
+[python3-12] {"ts": 1788702823.0717227, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "REPLAN_RETRY", "step_index": 0, "action": "replan"}
+[python3-12] {"ts": 1788702823.0718262, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 0, "skill": "member_A:pick_approach"}
+[python3-12] {"ts": 1788702824.517961, "job_id": "ASTRA_PRANAV_A", "step": "observe", "part_id": "member_A", "observed_xyz": [0.42, -0.3294, 0.1001]}
+[python3-12] [WARN] [1788702824.518855050] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702824.518911709] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702824.519306887] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702824.519391760] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702824.519406047] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702824.519431476] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702824.519459620] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702824.519880718] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702824.519953137] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702824.565667875] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702824.570606416] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702824.572738946] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702824.572868054] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702824.5729785, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.42005207831225827, -0.3294555483137073, 0.24506199342995055], "plan_success": true, "plan_time_ms": 54.54, "failure_reason": null}
+[python3-12] [INFO] [1788702824.573287909] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702824.573327084] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702824.573386348] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702824.573403701] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702824.573444950] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702824.578377150] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702824.578466592] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702824.578502961] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702824.578634584] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702824.579278839] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702824.579387227] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702824.579634001] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702824.579685449] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702831.514366279] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702831.530245590] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702831.555202619] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702831.5553834, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Approach", "target_xyz": [0.42005207831225827, -0.3294555483137073, 0.24506199342995055], "exec_result": "success"}
+[python3-12] {"ts": 1788702831.5556662, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 0, "skill": "member_A:pick_approach", "success": true}
+[python3-12] {"ts": 1788702831.5558007, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 0, "skill": "member_A:pick_approach", "result": "ok"}
+[python3-12] {"ts": 1788702831.555939, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 0}
+[python3-12] {"ts": 1788702831.556048, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 1, "skill": "member_A:pick"}
+[gazebo-1] [INFO] [1788702831.556826533] [ur_hand_controller]: Received & accepted new action goal
+[python3-12] [WARN] [1788702831.617768689] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702831.617828013] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702831.618080407] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702831.618156523] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702831.618165650] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702831.618191941] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702831.618221878] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702831.618734471] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702831.618821037] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702831.648508738] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702831.649021361] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702831.649548953] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702831.649598037] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702831.6497521, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Pick", "target_xyz": [0.42005207831225827, -0.3294555483137073, 0.12506199342995056], "plan_success": true, "plan_time_ms": 32.443, "failure_reason": null}
+[python3-12] [INFO] [1788702831.650081704] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702831.650130979] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702831.650174051] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702831.650190593] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702831.650224438] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702831.656903837] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702831.657009379] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702831.657046069] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702831.657174957] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702831.657474892] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702831.657537261] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702831.657764888] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702831.657784085] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702833.015461445] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702833.058249264] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702833.109936938] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702833.1101222, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Pick", "target_xyz": [0.42005207831225827, -0.3294555483137073, 0.12506199342995056], "exec_result": "success"}
+[gazebo-1] [INFO] [1788702833.111731960] [ur_hand_controller]: Received & accepted new action goal
+[python3-12] [execution] gripper still pressing after 3.0s; treating as gripped
+[python3-12] {"ts": 1788702836.1438773, "job_id": "ASTRA_PRANAV_A", "step": "verify", "skill": "Pick", "part_id": "member_A", "pick_verified": true}
+[python3-12] {"ts": 1788702836.1441774, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 1, "skill": "member_A:pick", "success": true}
+[python3-12] {"ts": 1788702836.1443028, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 1, "skill": "member_A:pick", "result": "ok"}
+[python3-12] {"ts": 1788702836.1444614, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 1}
+[python3-12] {"ts": 1788702836.1445763, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 2, "skill": "member_A:pick_retreat"}
+[python3-12] {"ts": 1788702836.1450365, "job_id": "ASTRA_PRANAV_A", "step": "transit_lift", "part_id": "member_A", "recipe_distance_m": 0.12, "required_m": 0.2875, "reason": "clear exclusion zone before transport"}
+[python3-12] [WARN] [1788702836.145572474] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702836.145621569] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702836.145860336] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702836.145931583] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702836.145939378] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702836.145962332] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702836.146003120] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702836.146449396] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702836.146522075] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702836.185398108] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702836.186231486] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702836.187060145] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702836.187128496] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702836.1872473, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Retreat", "target_xyz": [0.42005207831225827, -0.3294555483137073, 0.4125923088259718], "plan_success": true, "plan_time_ms": 42.041, "failure_reason": null}
+[python3-12] [INFO] [1788702836.187543071] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702836.187576144] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702836.187613005] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702836.187627292] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702836.187674022] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702836.207926034] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702836.208016177] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702836.208052246] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702836.208163369] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702836.208345919] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702836.208387319] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702836.208583815] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702836.208603413] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702838.487783646] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702838.508926975] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702838.539876006] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702838.5400493, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Retreat", "target_xyz": [0.42005207831225827, -0.3294555483137073, 0.4125923088259718], "exec_result": "success"}
+[python3-12] {"ts": 1788702839.3778872, "job_id": "ASTRA_PRANAV_A", "step": "verify_physical", "skill": "Retreat", "part_id": "member_A", "lift_m": 0.2791, "held": true}
+[python3-12] {"ts": 1788702839.3785024, "job_id": "ASTRA_PRANAV_A", "step": "transit_collision", "part_id": "member_A", "enforced": [], "exempt_still_overlapping": ["keepout"]}
+[python3-12] {"ts": 1788702839.3787005, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 2, "skill": "member_A:pick_retreat", "success": true}
+[python3-12] {"ts": 1788702839.3788264, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 2, "skill": "member_A:pick_retreat", "result": "ok"}
+[python3-12] {"ts": 1788702839.3789225, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 2}
+[python3-12] {"ts": 1788702839.379013, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 3, "skill": "member_A:place_approach"}
+[python3-12] {"ts": 1788702839.3794067, "job_id": "ASTRA_PRANAV_A", "step": "transit_collision", "part_id": "member_A", "enforced": [], "exempt_still_overlapping": ["keepout"]}
+[python3-12] [WARN] [1788702839.379994428] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702839.380053471] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702839.380378304] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702839.380454199] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702839.380464058] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702839.380489818] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702839.380535746] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702839.381053779] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702839.381134393] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702839.418925972] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702839.430582051] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702839.435235383] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702839.435415839] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702839.4355185, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.58, -0.02, 0.22999999999999998], "plan_success": true, "plan_time_ms": 55.926, "failure_reason": null}
+[python3-12] [INFO] [1788702839.435812409] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702839.435859900] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702839.435949131] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702839.435968709] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702839.436019987] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702839.436689851] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702839.436750508] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702839.436783381] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702839.436887731] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702839.437380446] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702839.437437495] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702839.437616979] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702839.437632779] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702855.108802719] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702855.137864803] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702855.178671767] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702855.178863, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Approach", "target_xyz": [0.58, -0.02, 0.22999999999999998], "exec_result": "success"}
+[python3-12] {"ts": 1788702855.1791606, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 3, "skill": "member_A:place_approach", "success": true}
+[python3-12] {"ts": 1788702855.1792784, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 3, "skill": "member_A:place_approach", "result": "ok"}
+[python3-12] {"ts": 1788702855.1793654, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 3}
+[python3-12] {"ts": 1788702855.179446, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 4, "skill": "member_A:place"}
+[python3-12] [WARN] [1788702855.179965417] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702855.180001997] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702855.180195157] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702855.180250243] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702855.180256966] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702855.180274549] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702855.180309456] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702855.180698983] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702855.180761533] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702855.214299695] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702855.214718879] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702855.215141258] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702855.215189551] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702855.2152689, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Place", "target_xyz": [0.58, -0.02, 0.11], "plan_success": true, "plan_time_ms": 35.708, "failure_reason": null}
+[python3-12] [INFO] [1788702855.215485087] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702855.215519694] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702855.215554170] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702855.215567716] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702855.215593275] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702855.220318151] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702855.220374198] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702855.220403544] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702855.220494870] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702855.220696125] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702855.220728347] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702855.220878775] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702855.220889807] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702856.382866460] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702856.421157461] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702856.454931274] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702856.4550846, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Place", "target_xyz": [0.58, -0.02, 0.11], "exec_result": "success"}
+[gazebo-1] [INFO] [1788702856.456320156] [ur_hand_controller]: Received & accepted new action goal
+[python3-12] {"ts": 1788702857.2595127, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 4, "skill": "member_A:place", "success": true}
+[python3-12] {"ts": 1788702857.2598076, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 4, "skill": "member_A:place", "result": "ok"}
+[python3-12] {"ts": 1788702857.2599049, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 4}
+[python3-12] {"ts": 1788702857.2599878, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 5, "skill": "member_A:place_retreat"}
+[python3-12] [WARN] [1788702857.260565670] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702857.260640624] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702857.260845857] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702857.260899460] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702857.260905762] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702857.260922945] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702857.260941490] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702857.261284147] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702857.261345254] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702857.290588583] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702857.291181158] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702857.291572148] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702857.291612455] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702857.2917085, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Retreat", "target_xyz": [0.58, -0.02, 0.22999999999999998], "plan_success": true, "plan_time_ms": 31.526, "failure_reason": null}
+[python3-12] [INFO] [1788702857.291933751] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702857.291960763] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702857.291998715] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702857.292012472] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702857.292038922] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702857.294022755] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702857.294082108] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702857.294111956] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702857.294206427] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702857.294438772] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702857.294474090] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702857.294683862] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702857.294704071] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702858.911503106] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702858.944937075] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702858.967998033] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702858.9681365, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Retreat", "target_xyz": [0.58, -0.02, 0.22999999999999998], "exec_result": "success"}
+[python3-12] {"ts": 1788702858.9683788, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 5, "skill": "member_A:place_retreat", "success": true}
+[python3-12] {"ts": 1788702858.9684734, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 5, "skill": "member_A:place_retreat", "result": "ok"}
+[python3-12] {"ts": 1788702858.9685414, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 5}
+[python3-12] {"ts": 1788702858.968608, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 6, "skill": "member_B:pick_approach"}
+[python3-12] {"ts": 1788702859.979999, "job_id": "ASTRA_PRANAV_A", "step": "observe", "part_id": "member_B", "observed_xyz": [0.38, 0.32, 0.1]}
+[python3-12] [WARN] [1788702859.980589099] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702859.980630017] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702859.980920213] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702859.980965681] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702859.980972383] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702859.980989045] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702859.981005587] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702859.981338756] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702859.981401897] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702860.013281505] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702860.014010612] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702860.014479761] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702860.014516402] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702860.0145924, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.38, 0.32, 0.225], "plan_success": true, "plan_time_ms": 34.295, "failure_reason": null}
+[python3-12] [INFO] [1788702860.014814072] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702860.014840493] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702860.014867655] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702860.014879387] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702860.014903433] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702860.024584076] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702860.024645254] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702860.024682255] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702860.024772658] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702860.024985776] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702860.025017547] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702860.025168336] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702860.025183205] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702861.537272651] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702861.575370705] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702861.597663438] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702861.597877, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Approach", "target_xyz": [0.38, 0.32, 0.225], "exec_result": "success"}
+[python3-12] {"ts": 1788702861.5982041, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 6, "skill": "member_B:pick_approach", "success": true}
+[python3-12] {"ts": 1788702861.5983033, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 6, "skill": "member_B:pick_approach", "result": "ok"}
+[python3-12] {"ts": 1788702861.5983765, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 6}
+[python3-12] {"ts": 1788702861.5984337, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 7, "skill": "member_B:pick"}
+[gazebo-1] [INFO] [1788702861.598917972] [ur_hand_controller]: Received & accepted new action goal
+[python3-12] [WARN] [1788702861.659550091] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702861.659598504] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702861.659855978] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702861.659963133] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702861.659978783] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702861.660009292] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702861.660042155] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702861.660513909] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702861.660662353] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702861.678113558] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702861.678483086] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702861.678829720] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702861.678861952] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702861.6789348, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Pick", "target_xyz": [0.38, 0.32, 0.125], "plan_success": true, "plan_time_ms": 19.701, "failure_reason": null}
+[python3-12] [INFO] [1788702861.679132561] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702861.679155154] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702861.679178228] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702861.679188959] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702861.679211993] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702861.687955329] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702861.688021065] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702861.688081862] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702861.688184659] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702861.688384482] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702861.688412475] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702861.688533698] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702861.688544348] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702862.567424280] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702862.588813481] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702862.618126047] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702862.6182811, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Pick", "target_xyz": [0.38, 0.32, 0.125], "exec_result": "success"}
+[gazebo-1] [INFO] [1788702862.619425306] [ur_hand_controller]: Received & accepted new action goal
+[python3-12] {"ts": 1788702863.9841397, "job_id": "ASTRA_PRANAV_A", "step": "verify", "skill": "Pick", "part_id": "member_B", "pick_verified": true}
+[python3-12] {"ts": 1788702863.9844394, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 7, "skill": "member_B:pick", "success": true}
+[python3-12] {"ts": 1788702863.9845798, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 7, "skill": "member_B:pick", "result": "ok"}
+[python3-12] {"ts": 1788702863.9847195, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 7}
+[python3-12] {"ts": 1788702863.9848487, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 8, "skill": "member_B:pick_retreat"}
+[python3-12] [WARN] [1788702863.985700657] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702863.985746185] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702863.986025410] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702863.986101025] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702863.986115853] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702863.986154828] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702863.986214512] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702863.986779505] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702863.986868025] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702864.013323213] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702864.013917141] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702864.014500880] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702864.014590301] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702864.0147054, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Retreat", "target_xyz": [0.38, 0.32, 0.225], "plan_success": true, "plan_time_ms": 29.312, "failure_reason": null}
+[python3-12] [INFO] [1788702864.014969097] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702864.015010546] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702864.015052096] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702864.015074889] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702864.015116349] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702864.018449496] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702864.018514391] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702864.018544539] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702864.018637958] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702864.018923485] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702864.018963181] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702864.019091607] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702864.019108429] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702864.897667638] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702864.919467464] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702864.948128328] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702864.948284, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Retreat", "target_xyz": [0.38, 0.32, 0.225], "exec_result": "success"}
+[python3-12] {"ts": 1788702865.6082847, "job_id": "ASTRA_PRANAV_A", "step": "verify_physical", "skill": "Retreat", "part_id": "member_B", "lift_m": 0.1029, "held": true}
+[python3-12] {"ts": 1788702865.6087828, "job_id": "ASTRA_PRANAV_A", "step": "transit_collision", "part_id": "member_B", "enforced": ["keepout"], "exempt_still_overlapping": []}
+[python3-12] {"ts": 1788702865.6145122, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 8, "skill": "member_B:pick_retreat", "success": true}
+[python3-12] {"ts": 1788702865.6147196, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 8, "skill": "member_B:pick_retreat", "result": "ok"}
+[python3-12] {"ts": 1788702865.614812, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 8}
+[python3-12] {"ts": 1788702865.6148922, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 9, "skill": "member_B:place_approach"}
+[python3-12] {"ts": 1788702865.6153033, "job_id": "ASTRA_PRANAV_A", "step": "transit_collision", "part_id": "member_B", "enforced": ["keepout"], "exempt_still_overlapping": []}
+[python3-12] [WARN] [1788702865.615742609] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702865.615784669] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702865.616007947] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702865.616067331] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702865.616073853] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702865.616092339] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702865.616125883] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702865.616513937] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702865.616571687] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702865.644170525] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702865.644752481] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702865.645277346] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702865.645327483] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702865.645417, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Approach", "target_xyz": [0.58, 0.13, 0.21000000000000002], "plan_success": true, "plan_time_ms": 29.972, "failure_reason": null}
+[python3-12] [INFO] [1788702865.645619562] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702865.645644310] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702865.645687843] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702865.645702000] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702865.645727469] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702865.649897741] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702865.649950492] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702865.649976902] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702865.650070762] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702865.650264273] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702865.650292928] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702865.650447304] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702865.650459357] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702867.107501581] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702867.150787497] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702867.188389631] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702867.188555, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Approach", "target_xyz": [0.58, 0.13, 0.21000000000000002], "exec_result": "success"}
+[python3-12] {"ts": 1788702867.1888547, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 9, "skill": "member_B:place_approach", "success": true}
+[python3-12] {"ts": 1788702867.1889815, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 9, "skill": "member_B:place_approach", "result": "ok"}
+[python3-12] {"ts": 1788702867.1890755, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 9}
+[python3-12] {"ts": 1788702867.1891623, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 10, "skill": "member_B:place"}
+[python3-12] [WARN] [1788702867.189584711] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702867.189661909] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702867.189886249] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702867.189945753] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702867.189953548] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702867.189974218] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702867.190011169] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702867.190414672] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702867.190482772] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702867.226821897] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702867.227216212] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702867.227691764] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702867.227746569] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702867.2278311, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Place", "target_xyz": [0.58, 0.13, 0.11], "plan_success": true, "plan_time_ms": 38.581, "failure_reason": null}
+[python3-12] [INFO] [1788702867.228057695] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702867.228086079] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702867.228113772] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702867.228126737] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702867.228153228] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702867.236188215] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702867.236280151] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702867.236318825] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702867.236418085] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702867.236631865] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702867.236673004] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702867.236842589] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702867.236859922] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702868.459938133] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702868.487107445] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702868.536155812] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702868.5363097, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Place", "target_xyz": [0.58, 0.13, 0.11], "exec_result": "success"}
+[gazebo-1] [INFO] [1788702868.537381861] [ur_hand_controller]: Received & accepted new action goal
+[python3-12] {"ts": 1788702868.738401, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 10, "skill": "member_B:place", "success": true}
+[python3-12] {"ts": 1788702868.738614, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 10, "skill": "member_B:place", "result": "ok"}
+[python3-12] {"ts": 1788702868.7387192, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 10}
+[python3-12] {"ts": 1788702868.7388153, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 11, "skill": "member_B:place_retreat"}
+[python3-12] [WARN] [1788702868.739269318] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702868.739307100] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702868.739485312] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702868.739532923] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702868.739539355] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702868.739580684] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702868.739601334] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702868.739966193] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702868.740028332] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702868.768703570] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702868.769075953] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702868.769409793] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702868.769443628] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702868.7695253, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "Retreat", "target_xyz": [0.58, 0.13, 0.21000000000000002], "plan_success": true, "plan_time_ms": 30.561, "failure_reason": null}
+[python3-12] [INFO] [1788702868.769767849] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702868.769796484] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702868.769824828] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702868.769837132] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702868.769862741] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702868.774672427] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702868.774744736] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702868.774795864] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702868.774912948] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702868.775164941] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702868.775206340] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702868.775386365] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702868.775401915] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702869.789258748] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702869.825630201] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702869.858732881] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702869.8588932, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "Retreat", "target_xyz": [0.58, 0.13, 0.21000000000000002], "exec_result": "success"}
+[python3-12] {"ts": 1788702869.8591738, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 11, "skill": "member_B:place_retreat", "success": true}
+[python3-12] {"ts": 1788702869.8592947, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 11, "skill": "member_B:place_retreat", "result": "ok"}
+[python3-12] {"ts": 1788702869.8593807, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 11}
+[python3-12] {"ts": 1788702869.8594766, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "PLAN_SKILL", "step_index": 12, "skill": "J1:joint_approach"}
+[python3-12] [WARN] [1788702869.859958159] [astra_run_job]: Parameter 'plan_request_params.planner_id' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [WARN] [1788702869.859988207] [astra_run_job]: Parameter 'plan_request_params.planning_time' not found in config use default value instead, check parameter type and namespace in YAML file
+[python3-12] [INFO] [1788702869.860170997] [astra_run_job]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[python3-12] [INFO] [1788702869.860219660] [astra_run_job]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[python3-12] [WARN] [1788702869.860226283] [moveit_2755251734.moveit.ros.validate_workspace_bounds]: It looks like the planning volume was not specified. Using default values.
+[python3-12] [INFO] [1788702869.860242634] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[python3-12] [INFO] [1788702869.860260999] [astra_run_job]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[python3-12] [INFO] [1788702869.860606231] [moveit_2755251734.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'ur_manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[python3-12] [INFO] [1788702869.860686314] [astra_run_job]: Calling Planner 'OMPL'
+[python3-12] [INFO] [1788702869.887016107] [astra_run_job]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[python3-12] [INFO] [1788702869.888197360] [astra_run_job]: Calling PlanningResponseAdapter 'ValidateSolution'
+[python3-12] [INFO] [1788702869.888897662] [astra_run_job]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[python3-12] [WARN] [1788702869.888949932] [moveit_2755251734.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[python3-12] {"ts": 1788702869.889032, "job_id": "ASTRA_PRANAV_A", "step": "plan", "skill": "ApproachJoint", "target_xyz": [0.58, 0.075, 0.255], "plan_success": true, "plan_time_ms": 29.39, "failure_reason": null}
+[python3-12] [INFO] [1788702869.889265146] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702869.889293370] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702869.889325973] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702869.889338567] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702869.889367031] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.1
+[python3-12] [INFO] [1788702869.893451418] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[python3-12] [INFO] [1788702869.893507014] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702869.893537673] [moveit_2755251734.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[python3-12] [INFO] [1788702869.893683472] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to ur_arm_controller
+[gazebo-1] [INFO] [1788702869.893949933] [ur_arm_controller]: Received new action goal
+[gazebo-1] [INFO] [1788702869.893983768] [ur_arm_controller]: Accepted new action goal
+[python3-12] [INFO] [1788702869.894147652] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: ur_arm_controller started execution
+[python3-12] [INFO] [1788702869.894160356] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[gazebo-1] [INFO] [1788702872.445780872] [ur_arm_controller]: Goal reached, success!
+[python3-12] [INFO] [1788702872.494362356] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'ur_arm_controller' successfully finished
+[python3-12] [INFO] [1788702872.523233585] [moveit_2755251734.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[python3-12] {"ts": 1788702872.5234096, "job_id": "ASTRA_PRANAV_A", "step": "execute", "skill": "ApproachJoint", "target_xyz": [0.58, 0.075, 0.255], "exec_result": "success"}
+[python3-12] {"ts": 1788702872.5236592, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "EXECUTE_SKILL", "step_index": 12, "skill": "J1:joint_approach", "success": true}
+[python3-12] {"ts": 1788702872.5237665, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "VERIFY", "step_index": 12, "skill": "J1:joint_approach", "result": "ok"}
+[python3-12] {"ts": 1788702872.5238512, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "NEXT_STEP", "step_index": 12}
+[python3-12] {"ts": 1788702872.5239322, "job_id": "ASTRA_PRANAV_A", "event": "fsm_state", "state": "COMPLETE", "steps_completed": 13}
+[python3-12] job ASTRA_PRANAV_A: complete (13/13 steps)
+[INFO] [python3-12]: process has finished cleanly [pid 55136]
+UR_SMOKE_DONE

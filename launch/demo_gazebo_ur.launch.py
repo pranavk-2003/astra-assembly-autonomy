@@ -1,14 +1,14 @@
-"""Gazebo (gz_sim) variant of the MoveIt2 demo: real physics (gravity,
-contact) instead of ros2_control's mock_components fake hardware used by
-demo.launch.py. Spawns the Panda into an empty gz_sim world via
-config/panda_gazebo.urdf.xacro (this repo's own - the upstream
-moveit_resources_panda_moveit_config package only ships mock_components/
-isaac hardware types, not gz_sim), bridges /clock so ROS and Gazebo share a
-simulated clock, then runs the identical controller-spawn-then-run_job
-sequence as demo.launch.py.
+"""UR variant of the Gazebo demo - the SAME job, skills, orchestrator and
+recovery as demo_gazebo.launch.py, on a different arm.
+
+Only the robot-facing layer differs: this repo's own UR URDF (config/
+ur_gazebo.urdf.xacro, which adds a gripper since UR arms ship without one)
+and SRDF, the UR controllers, and `--robot ur`, which selects the naming
+profile in astra_ros.robot_profile. Nothing in astra_core is aware of either
+arm - that is the point of the exercise.
 
 Usage:
-  ros2 launch launch/demo_gazebo.launch.py recipe:=recipes/ASTRA_Pranav_Variant_A.json
+  ros2 launch launch/demo_gazebo_ur.launch.py recipe:=recipes/ASTRA_Pranav_Variant_A.json
 """
 import os
 
@@ -40,22 +40,24 @@ def generate_launch_description():
     # GUI-less simulation. The GUI is by far the heaviest process here, and on
     # a loaded machine it starves the controller manager badly enough that the
     # controllers never come up ("Failed to acquire lock in 20 seconds").
+    planner_arg = DeclareLaunchArgument("planner", default_value="moveit")
     gz_args_arg = DeclareLaunchArgument(
         "gz_args",
         default_value="-r --physics-engine gz-physics-bullet-featherstone-plugin empty.sdf",
     )
     moveit_config = (
-        MoveItConfigsBuilder("moveit_resources_panda")
+        MoveItConfigsBuilder("ur", package_name="ur_moveit_config")
         .robot_description(
-            file_path=os.path.join(REPO_ROOT, "config",
-                                   "panda_gazebo.urdf.xacro"),
+            file_path=os.path.join(REPO_ROOT, "config", "ur_gazebo.urdf.xacro"),
             mappings={
-                "controllers_config_path": os.path.join(REPO_ROOT, "config", "ros2_controllers_gazebo.yaml"),
+                "controllers_config_path": os.path.join(REPO_ROOT, "config", "ros2_controllers_ur.yaml"),
             },
         )
-        .robot_description_semantic(file_path="config/panda.srdf")
-        .trajectory_execution(file_path="config/gripper_moveit_controllers.yaml")
-        .planning_pipelines(pipelines=["ompl"])
+        .robot_description_semantic(file_path=os.path.join(REPO_ROOT, "config", "ur.srdf"))
+        .joint_limits(file_path=os.path.join(REPO_ROOT, "config", "ur_joint_limits.yaml"))
+        .trajectory_execution(
+            file_path=os.path.join(REPO_ROOT, "config", "ur_moveit_controllers.yaml"))
+        .planning_pipelines(pipelines=["ompl", "pilz_industrial_motion_planner"])
         .moveit_cpp(file_path=os.path.join(REPO_ROOT, "config", "moveit_cpp.yaml"))
         .to_moveit_configs()
     )
@@ -74,7 +76,7 @@ def generate_launch_description():
         name="static_transform_publisher",
         output="log",
         arguments=["0.0", "0.0", "0.0", "0.0",
-                   "0.0", "0.0", "world", "panda_link0"],
+                   "0.0", "0.0", "world", "base_link"],
     )
 
     robot_state_publisher = Node(
@@ -89,7 +91,7 @@ def generate_launch_description():
         package="ros_gz_sim",
         executable="create",
         arguments=["-topic", "robot_description",
-                   "-name", "panda", "-z", "0.001"],
+                   "-name", "ur", "-z", "0.001"],
         output="screen",
     )
 
@@ -116,22 +118,21 @@ def generate_launch_description():
                    "--controller-manager", "/controller_manager"],
         parameters=[{"use_sim_time": True}],
     )
-    panda_arm_controller_spawner = Node(
+    ur_arm_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["panda_arm_controller", "-c", "/controller_manager"],
+        arguments=["ur_arm_controller", "-c", "/controller_manager"],
         parameters=[{"use_sim_time": True}],
     )
-    panda_hand_controller_spawner = Node(
+    ur_hand_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["panda_hand_controller", "-c", "/controller_manager"],
+        arguments=["ur_hand_controller", "-c", "/controller_manager"],
         parameters=[{"use_sim_time": True}],
     )
 
     rviz_config = PathJoinSubstitution(
-        [FindPackageShare("moveit_resources_panda_moveit_config"),
-         "launch", "moveit.rviz"]
+        [FindPackageShare("ur_moveit_config"), "config", "moveit.rviz"]
     )
     rviz_node = Node(
         package="rviz2",
@@ -155,7 +156,9 @@ def generate_launch_description():
             "python3", "-m", "astra_ros.nodes.run_job",
             "--recipe", LaunchConfiguration("recipe"),
             "--correction", LaunchConfiguration("correction"),
-            "--allowed-start-tolerance", "0.05",
+            "--allowed-start-tolerance", "0.1",
+            "--robot", "ur",
+            "--planner", LaunchConfiguration("planner"),
             "--spawn-in-gazebo",
         ],
         cwd=REPO_ROOT,
@@ -168,7 +171,7 @@ def generate_launch_description():
         OnProcessExit(
             target_action=spawn_robot,
             on_exit=[joint_state_broadcaster_spawner,
-                     panda_arm_controller_spawner, panda_hand_controller_spawner],
+                     ur_arm_controller_spawner, ur_hand_controller_spawner],
         )
     )
 
@@ -176,13 +179,13 @@ def generate_launch_description():
         cmd=[
             "bash", "-c",
             "until ros2 action list 2>/dev/null | grep -q "
-            "'/panda_arm_controller/follow_joint_trajectory'; do sleep 0.2; done",
+            "'/ur_arm_controller/follow_joint_trajectory'; do sleep 0.2; done",
         ],
         output="log",
     )
     run_job_after_controllers = RegisterEventHandler(
         OnProcessExit(
-            target_action=panda_arm_controller_spawner,
+            target_action=ur_arm_controller_spawner,
             on_exit=[wait_for_arm_controller],
         )
     )
@@ -210,6 +213,7 @@ def generate_launch_description():
             correction_arg,
             rviz_arg,
             gz_args_arg,
+            planner_arg,
             gz_sim,
             static_tf_node,
             robot_state_publisher,

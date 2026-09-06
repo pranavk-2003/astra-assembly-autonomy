@@ -12,7 +12,12 @@ from astra_core.recipe.models import Shape
 
 class ScenePort(abc.ABC):
     @abc.abstractmethod
-    def add_object(self, object_id: str, shape: Shape, pose: Pose) -> None: ...
+    def add_object(self, object_id: str, shape: Shape, pose: Pose,
+                   movable: bool = True) -> None:
+        """Add collision geometry. `movable` distinguishes a workpiece the
+        robot manipulates from fixed cell structure; a backend simulating
+        physics needs it (a workpiece must be a dynamic body to be grasped,
+        fixed structure must not move). Planning-only backends ignore it."""
 
     @abc.abstractmethod
     def update_pose(self, object_id: str, pose: Pose) -> None: ...
@@ -38,6 +43,24 @@ class ScenePort(abc.ABC):
         (measured on the supplied recipes), so the recipe's own obstacle ids
         are passed here while the ARM itself keeps checking against them."""
 
+    def observe_pose(self, object_id: str):
+        """The object's measured pose, or None if this backend cannot sense.
+
+        A backend wired to a sensor - or to a physics simulation, which is the
+        same problem - answers where the object ACTUALLY is, as opposed to
+        where the recipe nominally puts it. Returning None means "no
+        observation available", and the caller keeps using the nominal pose.
+        """
+        return None
+
+    def sync_view(self) -> None:
+        """Refresh any external view of the scene after the robot has moved.
+
+        No-op by default. A backend that mirrors the scene somewhere else (a
+        simulator's own render, say) uses this to keep a carried part drawn
+        where the plan actually has it, instead of frozen where it was
+        grasped. Purely presentational - nothing here affects planning."""
+
     def allow_arm_collision(self, object_id: str) -> None:
         """Permit the WHOLE ARM, not just the gripper, to occupy object_id.
 
@@ -53,5 +76,9 @@ class ScenePort(abc.ABC):
 
     @abc.abstractmethod
     def disallow_collision(self, object_id: str, with_ids: Sequence[str] = ()) -> None:
-        """Revert allow_collision once the part is safely placed back in the
-        world (post-detach), restoring normal collision checking against it."""
+        """Re-enable collision checking of object_id against `with_ids` -
+        used mid-transit as a carried part clears each obstacle it started
+        inside. Never revokes the gripper exemption from allow_collision:
+        once a part has been grasped, the gripper stays exempt against it for
+        the rest of the job (a placed part is still in contact with the
+        gripper at the retreat's start state)."""

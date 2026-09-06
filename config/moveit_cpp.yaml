@@ -13,11 +13,30 @@ planning_scene_monitor_options:
   monitored_planning_scene_topic: "/moveit_cpp/monitored_planning_scene"
   wait_for_initial_state_timeout: 10.0
 
+# Both pipelines are loaded; which one is used is a per-robot choice (see
+# astra_ros.robot_profile.RobotProfile.planning_pipeline). Pilz gives
+# deterministic industrial motion; OMPL searches around obstacles.
 planning_pipelines:
-  pipeline_names: ["ompl"]
+  pipeline_names: ["ompl", "pilz_industrial_motion_planner"]
+
+# A physically simulated joint resting AT a limit drifts microscopically past
+# it; without this the CheckStartStateBounds adapter then refuses every plan
+# ("outside bounds by [-0.000484]"). This tolerance clamps such a state back
+# into range rather than failing on it - it is not a way to accept genuinely
+# out-of-range starts, being far below any meaningful joint error.
+start_state_max_bounds_error: 0.01
 
 plan_request_params:
-  planning_attempts: 1
+  planning_attempts: 2
+  planning_time: 3.0
   planning_pipeline: ompl
-  max_velocity_scaling_factor: 1.0
-  max_acceleration_scaling_factor: 1.0
+  # Deliberately well below full speed. These arms are driven through a
+  # position command interface, which has no feed-forward: the faster the
+  # commanded motion, the further the arm lags behind its own trajectory. At
+  # full speed it cuts corners badly enough to physically clip an obstacle the
+  # plan was clear of, and then fails its next trajectory because its actual
+  # state no longer matches the planned start ("start point deviates from
+  # current robot state ... at joint wrist_1_joint"). Slower commands track
+  # closely, which is what makes the planned clearance mean anything.
+  max_velocity_scaling_factor: 0.3
+  max_acceleration_scaling_factor: 0.3
